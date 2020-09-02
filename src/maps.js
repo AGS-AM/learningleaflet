@@ -94,7 +94,13 @@ function MapFun() {
                             return item.id < 500 ? <Marker position={[item.lat, item.lng]} key={item.id} >
                                 {/* if else case in jsx which is somehow not what im used to at all coming from basically oop only works */}
                                 <Popup>
+                                    
+                                    <h4>ID: {item.id}</h4>
                                     {item.name}
+                                    <br></br>
+                                    Lat : {item.lat} 
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    Long : {item.lng}
                                 </Popup>
                             </Marker> :null
                             }
