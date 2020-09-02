@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Map as LeafletMap, TileLayer, Marker, Popup, LayersControl, LayerGroup} from 'react-leaflet';
+import { Map as LeafletMap, TileLayer, Marker, Popup, LayersControl, LayerGroup } from 'react-leaflet';
 import axios from 'axios';
+import L from 'leaflet';
 
 function MapFun() {
     const [controlSet, setControl] = useState(
@@ -39,11 +40,16 @@ function MapFun() {
         setTimeout(() => {
             map.flyTo([15, 100], 6, { duration: 3 })
         }, 1000);
-        
+        var testgroup = L.layerGroup();
+        var mark = L.marker([11,11]);
+        testgroup.addLayer(mark);
+        testgroup.addTo(map);
+        //var layertest = L.control.layers().addTo(map);
+        //somewhat working but need to rework jsx to align with this method 
+        L.control.layers().addOverlay(testgroup,"testers");
     }, [mapRef]);
-    //time to change and use REF instead since this is really not practicle 
     const { BaseLayer, Overlay } = LayersControl;
-    
+
 
 
     return (
@@ -75,22 +81,32 @@ function MapFun() {
                 <BaseLayer name="nasa">
                     <TileLayer
                         url='https://gibs-{s}.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default//EPSG3857_500m/{z}/{y}/{x}.jpeg'
-                        maxNativeZoom ={8}
+                        maxNativeZoom={8}
                     />
                 </BaseLayer>
 
-            <Overlay name="testcon">
-            <LayerGroup name="test">
-            {markers.locations.map(item => (
-                <Marker position={[item.lat, item.lng]} key={item.id}>
+                <Overlay name="bob">
+                    <LayerGroup name="test">
+                        {markers.locations.map(item => (
+                            <Marker position={[item.lat, item.lng]} key={item.id}>
 
-                    <Popup>
-                        {item.name}
-                    </Popup>
-                </Marker>
-            ))}
-            </LayerGroup>
-            </Overlay>
+                                <Popup>
+                                    {item.name}
+                                </Popup>
+                            </Marker>
+                        ))}
+                    </LayerGroup>
+                    </Overlay>
+                    <Overlay name="bob2">
+                    <layerGroup name="test2">
+                        <Marker position={[1,1]}>
+
+                            <Popup>
+                                LOL
+                            </Popup>
+                        </Marker>
+                    </layerGroup>
+                </Overlay>
             </LayersControl>
         </LeafletMap>
     );
