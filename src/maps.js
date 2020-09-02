@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Map as LeafletMap, TileLayer, Marker, Popup, LayersControl, LayerGroup } from 'react-leaflet';
 import axios from 'axios';
-import L from 'leaflet';
 
 function MapFun() {
     const [controlSet, setControl] = useState(
@@ -19,38 +18,42 @@ function MapFun() {
             easeLinearity: 0.35,
         }
     );
+    const fetchData = async () => {
+        const result = await axios(
+            // using axios and not import per future usage
+            // './resource/samplegeo.geojson'
+            './resource/station.json',
+            // this is the one that points to TH 
+            // './resource/station_full.json',
+        );
+        //Clean the data here and walla ur done with shit 
+        //purge data here and send back. or after fetch data
+        setMarkers(result.data);
+        console.log(result.data);
+    };
     const [markers, setMarkers] = useState({ locations: [] });
     useEffect(() => {
-        const fetchData = async () => {
-            const result = await axios(
-                //using axios and not import per future usage
-                './resource/station.json',
-                // './resource/station_full.json',
-            );
-            setMarkers(result.data);
-            console.log(result.data);
-        };
         fetchData();
     }, []);
     const mapRef = useRef();
     useEffect(() => {
         const { current = {} } = mapRef;
         const { leafletElement: map } = current;
-        console.log(map);
+        // console.log(map);
         setTimeout(() => {
-            map.flyTo([15, 100], 6, { duration: 3 })
+            map.flyTo([10, 100], 6, { duration: 3 })
         }, 1000);
-        var testgroup = L.layerGroup();
-        var mark = L.marker([11,11]);
-        testgroup.addLayer(mark);
-        testgroup.addTo(map);
-        //var layertest = L.control.layers().addTo(map);
-        //somewhat working but need to rework jsx to align with this method 
-        L.control.layers().addOverlay(testgroup,"testers");
+        // var testgroup = L.layerGroup();
+        // var mark = L.marker([11,11]);
+        // testgroup.addLayer(mark);
+        // testgroup.addTo(map);
+        // //var layertest = L.control.layers().addTo(map);
+        // //somewhat working but need to rework jsx to align with this method 
+        // L.control.layers().addOverlay(testgroup,"testers");
     }, [mapRef]);
     const { BaseLayer, Overlay } = LayersControl;
 
-
+    //better to create a JS that reads everything and then sends it to this after it's done I guess. . . one file coding sucks already
 
     return (
         // <ul>
@@ -85,27 +88,29 @@ function MapFun() {
                     />
                 </BaseLayer>
 
-                <Overlay name="bob">
+                <Overlay checked name="bob">
                     <LayerGroup name="test">
-                        {markers.locations.map(item => (
-                            <Marker position={[item.lat, item.lng]} key={item.id}>
-
+                        {markers.locations.map(item => {
+                            return item.id < 500 ? <Marker position={[item.lat, item.lng]} key={item.id} >
+                                {/* if else case in jsx which is somehow not what im used to at all coming from basically oop only works */}
                                 <Popup>
                                     {item.name}
                                 </Popup>
-                            </Marker>
-                        ))}
+                            </Marker> :null
+                            }
+                        )
+                    }
                     </LayerGroup>
-                    </Overlay>
-                    <Overlay name="bob2">
-                    <layerGroup name="test2">
-                        <Marker position={[1,1]}>
+                </Overlay>
+                <Overlay name="bob2">
+                    <LayerGroup name="test2">
+                        <Marker position={[1, 1]}>
 
                             <Popup>
                                 LOL
                             </Popup>
                         </Marker>
-                    </layerGroup>
+                    </LayerGroup>
                 </Overlay>
             </LayersControl>
         </LeafletMap>
