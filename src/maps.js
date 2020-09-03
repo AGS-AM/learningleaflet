@@ -131,34 +131,63 @@ function MapFun() {
 
                 {/* code em here bois */}
                 {rivers.map(river => {
-                    return river === ""||river === null ? null: <Overlay name={river} key={river}>
-                        <LayerGroup name={"lgroup" + river}>
-                        <MarkerClusterGroup>
-                            {markers.locations.map(item => {
-                                return item.basin === river ? <Marker position={[item.lat, item.lng]} key={item.id} >
-                                    {/* if else case in jsx which is somehow not what im used to at all coming from basically oop only works */}
-                                    <Popup>
-                                        <HighchartsReact highcharts={Highcharts} options={option} />
-                                        <div id={item.id + "_test"}>
-                                            <h4>ID: {item.id}</h4>
-                                            {item.name}
-                                            <br></br>
+                    return river === "" || river === null ?
+                        <Overlay name="Unknown" key="Unknown">
+                            <LayerGroup name={"lgroup" + "Unknown"}>
+                                <MarkerClusterGroup>
+                                    {markers.locations.map(item => {
+                                        return item.basin === river ? <Marker position={[item.lat, item.lng]} key={item.id} >
+                                            {/* if else case in jsx which is somehow not what im used to at all coming from basically oop only works */}
+                                            <Popup>
+                                                <HighchartsReact highcharts={Highcharts} options={option} />
+                                                <div id={item.id + "_test"}>
+                                                    <h4>ID: {item.id}</h4>
+                                                    {item.name}
+                                                    <br></br>
                                     Lat : {item.lat}
                                     &nbsp;&nbsp;&nbsp;&nbsp;
                                     Long : {item.lng}
-                                            <br></br>
+                                                    <br></br>
                                     Basin Name : {item.basin}
-                                        </div>
-                                    </Popup>
-                                </Marker> : null
-                            }
-                            )
-                            }
-                            </MarkerClusterGroup>
-                        </LayerGroup>
-                    </Overlay>
+                                                </div>
+                                            </Popup>
+                                        </Marker> : null
+                                    }
+                                    )
+                                    }
+                                </MarkerClusterGroup>
+                            </LayerGroup>
+                        </Overlay>
+                        :
+                        <Overlay name={river} key={river}>
+                            <LayerGroup name={"lgroup" + river}>
+                                <MarkerClusterGroup>
+                                    {markers.locations.map(item => {
+                                        return item.basin === river ? <Marker position={[item.lat, item.lng]} key={item.id} >
+                                            {/* if else case in jsx which is somehow not what im used to at all coming from basically oop only works */}
+                                            <Popup>
+                                                <HighchartsReact highcharts={Highcharts} options={option} />
+                                                <div id={item.id + "_test"}>
+                                                    <h4>ID: {item.id}</h4>
+                                                    {item.name}
+                                                    <br></br>
+                                    Lat : {item.lat}
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    Long : {item.lng}
+                                                    <br></br>
+                                    Basin Name : {item.basin}
+                                                </div>
+                                            </Popup>
+                                        </Marker> : null
+                                    }
+                                    )
+                                    }
+                                </MarkerClusterGroup>
+                            </LayerGroup>
+                        </Overlay>
+
                 })}
-                
+
             </LayersControl>
         </LeafletMap>
     );
