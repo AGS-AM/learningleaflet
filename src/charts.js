@@ -28,10 +28,6 @@ function Charts() {
             // this is the one that points to TH 
             // './resource/station_full.json',
         );
-        //Clean the data here and walla ur done with shit 
-        //purge data here and send back. or after fetch data
-        // console.log("lel");
-        // console.log(result.data);
         return (result.data);
     };
     useEffect(() => {
@@ -54,18 +50,14 @@ function Charts() {
                     }
                 ]
             }
-            // console.log("lol");
-            // console.log(waitingbruh);
             setOption(temp);
             var {locations} = waitingbruh;
             var reallytemp = [];
             // console.log(locations);
             locations.forEach(element => {
                 reallytemp.push(element.basin)
-                
-                // console.log(distinct(reallytemp));
-            });//got the distinct river names now to seperate them and do stuff with it 
-            // console.log(waitingbruh);
+            });
+
         }
     }, [])
 
