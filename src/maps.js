@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Map as LeafletMap, TileLayer, Marker, Popup, LayersControl, LayerGroup } from 'react-leaflet';
 import axios from 'axios';
 import $ from 'jquery';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
 
 function MapFun() {
     const [controlSet, setControl] = useState(
@@ -57,7 +59,23 @@ function MapFun() {
     const { BaseLayer, Overlay } = LayersControl;
 
     //better to create a JS that reads everything and then sends it to this after it's done I guess. . . one file coding sucks already
-    
+    const [option, setOption] = useState(
+        {
+            chart: {
+                height: 400,
+                width: 260,
+                type: 'pie'
+            },
+            title: {
+                text: 'Test'
+            },
+            series: [
+                {
+                    data: [1, 2, 3, 4, 5, 6, 2, 3, 4, 2, 4, 5, 1, 2, 5, 3, 5, 6, 6, 7, 2]
+                }
+            ]
+        }
+    )
     return (
         // <ul>
         //     {markers.locations.map(item => (
@@ -97,6 +115,7 @@ function MapFun() {
                             return item.station_type === "A" ? <Marker position={[item.lat, item.lng]} key={item.id} >
                                 {/* if else case in jsx which is somehow not what im used to at all coming from basically oop only works */}
                                 <Popup>
+                                <HighchartsReact highcharts={Highcharts} options={option} />
                                     <div id={item.id + "_test"}>
                                     <h4>ID: {item.id}</h4>
                                     {item.name}
