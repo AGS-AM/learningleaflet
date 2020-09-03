@@ -3,12 +3,19 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 import MapFun from './maps';
+import Charts from './charts';
 
 ReactDOM.render(
   <React.StrictMode>
     <MapFun />
   </React.StrictMode>,
   document.getElementById('root')
+);
+ReactDOM.render(
+  <React.StrictMode>
+    <Charts />
+  </React.StrictMode>,
+  document.getElementById('root2')
 );
 
 // If you want your app to work offline and load faster, you can change

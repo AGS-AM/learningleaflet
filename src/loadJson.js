@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 function loadJson() {  
-const fetchData = async () => {
+const storeData = async () => {
     const result = await axios(
         // using axios and not import per future usage
         // './resource/samplegeo.geojson'
@@ -15,6 +15,6 @@ const fetchData = async () => {
     //console.log(result.data);
     return(result.data);
 };
-return fetchData;
+return storeData();
 }
 export default loadJson

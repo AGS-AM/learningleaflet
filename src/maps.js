@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Map as LeafletMap, TileLayer, Marker, Popup, LayersControl, LayerGroup } from 'react-leaflet';
 import axios from 'axios';
+import $ from 'jquery';
 
 function MapFun() {
     const [controlSet, setControl] = useState(
         {
             //seperate these to editable ones and locked dead ones
-            center: [1, 10],//Start Location
+            center: [10, 100],//Start Location
             zoom: 6,
             maxZoom: 8, //changed to 8 to be same with nasa
             attributionControl: true,
@@ -43,6 +44,8 @@ function MapFun() {
         setTimeout(() => {
             map.flyTo([10, 100], 6, { duration: 3 })
         }, 1000);
+        //refer to charts for data manip b4 seding off to the webpage
+        // see Don . . going to just jsx is a lot better for ur brain than this lol
         // var testgroup = L.layerGroup();
         // var mark = L.marker([11,11]);
         // testgroup.addLayer(mark);
@@ -54,7 +57,7 @@ function MapFun() {
     const { BaseLayer, Overlay } = LayersControl;
 
     //better to create a JS that reads everything and then sends it to this after it's done I guess. . . one file coding sucks already
-
+    
     return (
         // <ul>
         //     {markers.locations.map(item => (
@@ -87,11 +90,34 @@ function MapFun() {
                         maxNativeZoom={8}
                     />
                 </BaseLayer>
-
-                <Overlay checked name="bob">
+                {/* more or less make the overlay be generated based on station type ?!? sounds good though */}
+                <Overlay name="A">
                     <LayerGroup name="test">
                         {markers.locations.map(item => {
-                            return item.id < 500 ? <Marker position={[item.lat, item.lng]} key={item.id} >
+                            return item.station_type === "A" ? <Marker position={[item.lat, item.lng]} key={item.id} >
+                                {/* if else case in jsx which is somehow not what im used to at all coming from basically oop only works */}
+                                <Popup>
+                                    <div id={item.id + "_test"}>
+                                    <h4>ID: {item.id}</h4>
+                                    {item.name}
+                                    <br></br>
+                                    Lat : {item.lat} 
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    Long : {item.lng}
+                                    <br></br>
+                                    Station Type : {item.station_type}
+                                    </div>
+                                </Popup>
+                            </Marker> :null
+                            }
+                        )
+                    }
+                    </LayerGroup>
+                </Overlay>
+                <Overlay checked name="R">
+                    <LayerGroup name="test2">
+                        {markers.locations.map(item => {
+                            return item.station_type === "R" ? <Marker position={[item.lat, item.lng]} key={item.id} >
                                 {/* if else case in jsx which is somehow not what im used to at all coming from basically oop only works */}
                                 <Popup>
                                     
@@ -101,21 +127,13 @@ function MapFun() {
                                     Lat : {item.lat} 
                                     &nbsp;&nbsp;&nbsp;&nbsp;
                                     Long : {item.lng}
+                                    <br></br>
+                                    Station Type : {item.station_type}
                                 </Popup>
                             </Marker> :null
                             }
                         )
                     }
-                    </LayerGroup>
-                </Overlay>
-                <Overlay name="bob2">
-                    <LayerGroup name="test2">
-                        <Marker position={[1, 1]}>
-
-                            <Popup>
-                                LOL
-                            </Popup>
-                        </Marker>
                     </LayerGroup>
                 </Overlay>
             </LayersControl>
