@@ -5,7 +5,7 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import distinct from 'distinct';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
-import {Button} from '@material-ui/core';
+import { Button } from '@material-ui/core';
 
 function MapFun() {
     const [controlSet] = useState(
@@ -66,7 +66,7 @@ function MapFun() {
 
     const [option] = useState(
         {
-            
+
             chart: {
                 height: 400,
                 width: 260,
@@ -82,6 +82,11 @@ function MapFun() {
             ]
         }
     )
+    
+    const [flipflop, setflip] = useState(false);
+    const clicked = () => setflip(!flipflop);
+    
+
 
     return (
         <LeafletMap ref={mapRef}
@@ -144,7 +149,8 @@ function MapFun() {
                                     {markers.locations.map(item => {
                                         return item.basin === river ? <Marker position={[item.lat, item.lng]} key={item.id} >
                                             <Popup>
-                                                <HighchartsReact highcharts={Highcharts} options={option} />
+
+                                            {flipflop === true ? <HighchartsReact highcharts={Highcharts} options={option} />: null}
                                                 <div id={item.id + "_test"}>
                                                     <h4>ID: {item.id}</h4>
                                                     {item.name}
@@ -155,7 +161,7 @@ function MapFun() {
                                                     <br></br>
                                     Basin Name : {item.basin}
                                                 </div>
-                                            <Button variant="contained" color="primary" >BOB</Button>
+                                                <Button variant="contained" color="primary" onClick={clicked}>BOB</Button>
                                             </Popup>
                                         </Marker> : null
                                     }
