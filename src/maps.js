@@ -5,6 +5,7 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import distinct from 'distinct';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
+import {Button} from '@material-ui/core';
 
 function MapFun() {
     const [controlSet] = useState(
@@ -178,6 +179,8 @@ function MapFun() {
                                                     <br></br>
                                     Basin Name : {item.basin}
                                                 </div>
+                                                {/* router here to make bob do smth with smth dunno what */}
+                                            <Button variant="contained" color="primary">BOB</Button>
                                             </Popup>
                                         </Marker> : null
                                     }

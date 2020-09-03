@@ -40,7 +40,7 @@ function Charts() {
             const waitingbruh = await fetchData();            
             const temp = {
                 chart: {
-                    type: 'spline'
+                    type: 'pie'
                 },
                 title: {
                     text: 'BOB'
