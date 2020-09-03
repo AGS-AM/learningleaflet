@@ -4,6 +4,9 @@ import axios from 'axios';
 import $ from 'jquery';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import { wait } from '@testing-library/react';
+import distinct from 'distinct';
+import { DivOverlay } from 'leaflet';
 
 function MapFun() {
     const [controlSet, setControl] = useState(
@@ -33,10 +36,26 @@ function MapFun() {
         //purge data here and send back. or after fetch data
         setMarkers(result.data);
         console.log(result.data);
+        return result.data.locations;
     };
     const [markers, setMarkers] = useState({ locations: [] });
+    const [rivers, setRivers] = useState([])
     useEffect(() => {
-        fetchData();
+        waitforFetch();
+        var tempinfo = [];
+        var temp2 = [];
+        async function waitforFetch() {
+            tempinfo = await fetchData();
+
+            tempinfo.forEach(element => {
+                temp2.push(element.basin)
+            });
+            console.log("temp");
+            console.log(distinct(temp2));
+            setRivers(distinct(temp2));
+            return distinct(temp2);
+        }
+
     }, []);
     const mapRef = useRef();
     useEffect(() => {
@@ -76,6 +95,8 @@ function MapFun() {
             ]
         }
     )
+
+    // b4 i forget, get sort, get distinct, run it with river or what ever, create overlay based on that, use if else and add info in, remove the iff A or R and walla more stuff
     return (
         // <ul>
         //     {markers.locations.map(item => (
@@ -109,52 +130,35 @@ function MapFun() {
                     />
                 </BaseLayer>
                 {/* more or less make the overlay be generated based on station type ?!? sounds good though */}
-                <Overlay name="A">
-                    <LayerGroup name="test">
-                        {markers.locations.map(item => {
-                            return item.station_type === "A" ? <Marker position={[item.lat, item.lng]} key={item.id} >
-                                {/* if else case in jsx which is somehow not what im used to at all coming from basically oop only works */}
-                                <Popup>
-                                <HighchartsReact highcharts={Highcharts} options={option} />
-                                    <div id={item.id + "_test"}>
-                                    <h4>ID: {item.id}</h4>
-                                    {item.name}
-                                    <br></br>
-                                    Lat : {item.lat} 
+
+                {/* code em here bois */}
+                {rivers.map(river => {
+                    return <Overlay name={river} key={river}>
+                        <LayerGroup name={"lgroup" + river}>
+                            {markers.locations.map(item => {
+                                return item.basin === river ? <Marker position={[item.lat, item.lng]} key={item.id} >
+                                    {/* if else case in jsx which is somehow not what im used to at all coming from basically oop only works */}
+                                    <Popup>
+                                        <HighchartsReact highcharts={Highcharts} options={option} />
+                                        <div id={item.id + "_test"}>
+                                            <h4>ID: {item.id}</h4>
+                                            {item.name}
+                                            <br></br>
+                                    Lat : {item.lat}
                                     &nbsp;&nbsp;&nbsp;&nbsp;
                                     Long : {item.lng}
-                                    <br></br>
-                                    Station Type : {item.station_type}
-                                    </div>
-                                </Popup>
-                            </Marker> :null
+                                            <br></br>
+                                    Basin Name : {item.basin}
+                                        </div>
+                                    </Popup>
+                                </Marker> : null
                             }
-                        )
-                    }
-                    </LayerGroup>
-                </Overlay>
-                <Overlay checked name="R">
-                    <LayerGroup name="test2">
-                        {markers.locations.map(item => {
-                            return item.station_type === "R" ? <Marker position={[item.lat, item.lng]} key={item.id} >
-                                {/* if else case in jsx which is somehow not what im used to at all coming from basically oop only works */}
-                                <Popup>
-                                    
-                                    <h4>ID: {item.id}</h4>
-                                    {item.name}
-                                    <br></br>
-                                    Lat : {item.lat} 
-                                    &nbsp;&nbsp;&nbsp;&nbsp;
-                                    Long : {item.lng}
-                                    <br></br>
-                                    Station Type : {item.station_type}
-                                </Popup>
-                            </Marker> :null
+                            )
                             }
-                        )
-                    }
-                    </LayerGroup>
-                </Overlay>
+                        </LayerGroup>
+                    </Overlay>
+                })}
+                
             </LayersControl>
         </LeafletMap>
     );

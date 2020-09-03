@@ -3,6 +3,7 @@ import { render } from 'react-dom';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import axios from 'axios';
+import { wait } from '@testing-library/react';
 
 function Charts() {
     const [option, setOption] = useState(
@@ -54,10 +55,19 @@ function Charts() {
                     }
                 ]
             }
-            // console.log("lol");
+            console.log("lol");
             // console.log(waitingbruh);
             setOption(temp);
-            console.log(option);
+            var {locations} = waitingbruh;
+            var distinct = require('distinct');
+            var reallytemp = [];
+            console.log(locations);
+            locations.forEach(element => {
+                reallytemp.push(element.basin)
+                
+                // console.log(distinct(reallytemp));
+            });//got the distinct river names now to seperate them and do stuff with it 
+            console.log(waitingbruh);
         }
     }, [])
 
