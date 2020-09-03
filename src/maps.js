@@ -132,12 +132,12 @@ function MapFun() {
                 {/* code em here bois */}
                 {rivers.map(river => {
                     return river === "" || river === null ?
-                        <Overlay name="Unknown" key="Unknown">
+                        /*<Overlay name="Unknown" key="Unknown">
                             <LayerGroup name={"lgroup" + "Unknown"}>
                                 <MarkerClusterGroup>
                                     {markers.locations.map(item => {
                                         return item.basin === river ? <Marker position={[item.lat, item.lng]} key={item.id} >
-                                            {/* if else case in jsx which is somehow not what im used to at all coming from basically oop only works */}
+                                            
                                             <Popup>
                                                 <HighchartsReact highcharts={Highcharts} options={option} />
                                                 <div id={item.id + "_test"}>
@@ -152,12 +152,12 @@ function MapFun() {
                                                 </div>
                                             </Popup>
                                         </Marker> : null
-                                    }
-                                    )
-                                    }
+                                    })}
                                 </MarkerClusterGroup>
                             </LayerGroup>
-                        </Overlay>
+                        </Overlay>*/
+                        //Nulled due to the fact that "" and null was not merged
+                        null
                         :
                         <Overlay name={river} key={river}>
                             <LayerGroup name={"lgroup" + river}>
