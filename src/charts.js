@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { render } from 'react-dom';
+import React, { useState, useEffect} from 'react'
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import axios from 'axios';
-import { wait } from '@testing-library/react';
+
 
 function Charts() {
     const [option, setOption] = useState(
@@ -31,8 +30,8 @@ function Charts() {
         );
         //Clean the data here and walla ur done with shit 
         //purge data here and send back. or after fetch data
-        console.log("lel");
-        console.log(result.data);
+        // console.log("lel");
+        // console.log(result.data);
         return (result.data);
     };
     useEffect(() => {
@@ -55,19 +54,19 @@ function Charts() {
                     }
                 ]
             }
-            console.log("lol");
+            // console.log("lol");
             // console.log(waitingbruh);
             setOption(temp);
             var {locations} = waitingbruh;
             var distinct = require('distinct');
             var reallytemp = [];
-            console.log(locations);
+            // console.log(locations);
             locations.forEach(element => {
                 reallytemp.push(element.basin)
                 
                 // console.log(distinct(reallytemp));
             });//got the distinct river names now to seperate them and do stuff with it 
-            console.log(waitingbruh);
+            // console.log(waitingbruh);
         }
     }, [])
 

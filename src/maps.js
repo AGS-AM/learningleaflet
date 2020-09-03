@@ -33,7 +33,7 @@ function MapFun() {
         //Clean the data here and walla ur done with shit 
         //purge data here and send back. or after fetch data
         setMarkers(result.data);
-        console.log(result.data);
+        // console.log(result.data);
         return result.data.locations;
     };
     const [markers, setMarkers] = useState({ locations: [] });
@@ -48,8 +48,8 @@ function MapFun() {
             tempinfo.forEach(element => {
                 temp2.push(element.basin)
             });
-            console.log("temp");
-            console.log(distinct(temp2));
+            // console.log("temp");
+            // console.log(distinct(temp2));
             setRivers(distinct(temp2));
             return distinct(temp2);
         }
