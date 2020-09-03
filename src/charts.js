@@ -8,6 +8,8 @@ function Charts() {
     const [option, setOption] = useState(
         {
             chart: {
+                height: 400,
+                width: 260,
                 type: 'spline'
             },
             title: {
@@ -36,6 +38,8 @@ function Charts() {
             const waitingbruh = await fetchData();            
             const temp = {
                 chart: {
+                    height: 400,
+                width: 260,
                     type: 'pie'
                 },
                 title: {
@@ -61,10 +65,10 @@ function Charts() {
         }
     }, [])
 
-
+    //resize the div to acutally place it to the right side instead of the btm
     return (
-        <div hidden={false}>
-            <HighchartsReact highcharts={Highcharts} options={option} />
+        <div height = "100 px" width="100 px" hidden={false}>
+            <HighchartsReact highcharts={Highcharts} options={option}  />
         </div>
     )
 }

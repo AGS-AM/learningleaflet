@@ -10,7 +10,6 @@ import { Button } from '@material-ui/core';
 function MapFun() {
     const [controlSet] = useState(
         {
-
             center: [10, 100],//Start Location
             zoom: 6,
             maxZoom: 16, //changed to 8 to be same with nasa
