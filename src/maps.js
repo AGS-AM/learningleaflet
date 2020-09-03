@@ -7,7 +7,7 @@ import distinct from 'distinct';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 
 function MapFun() {
-    const [controlSet, setControl] = useState(
+    const [controlSet] = useState(
         {
             //seperate these to editable ones and locked dead ones
             center: [10, 100],//Start Location
@@ -76,7 +76,7 @@ function MapFun() {
     const { BaseLayer, Overlay } = LayersControl;
 
     //better to create a JS that reads everything and then sends it to this after it's done I guess. . . one file coding sucks already
-    const [option, setOption] = useState(
+    const [option] = useState(
         {
             chart: {
                 height: 400,
@@ -114,6 +114,7 @@ function MapFun() {
             dragging={controlSet.dragging}
             animate={controlSet.animate}
             easeLinearity={controlSet.easeLinearity}
+            worldCopyJump={true}
         >
             <LayersControl>
                 <BaseLayer checked name="street">

@@ -58,7 +58,6 @@ function Charts() {
             // console.log(waitingbruh);
             setOption(temp);
             var {locations} = waitingbruh;
-            var distinct = require('distinct');
             var reallytemp = [];
             // console.log(locations);
             locations.forEach(element => {
