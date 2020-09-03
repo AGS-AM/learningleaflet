@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Map as LeafletMap, TileLayer, Marker, Popup, LayersControl, LayerGroup } from 'react-leaflet';
 import axios from 'axios';
-import $ from 'jquery';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { wait } from '@testing-library/react';
 import distinct from 'distinct';
-import { DivOverlay } from 'leaflet';
+import MarkerClusterGroup from 'react-leaflet-markercluster';
 
 function MapFun() {
     const [controlSet, setControl] = useState(
@@ -14,7 +12,7 @@ function MapFun() {
             //seperate these to editable ones and locked dead ones
             center: [10, 100],//Start Location
             zoom: 6,
-            maxZoom: 8, //changed to 8 to be same with nasa
+            maxZoom: 16, //changed to 8 to be same with nasa
             attributionControl: true,
             zoomControl: true,
             doubleClickZoom: false,
@@ -133,8 +131,9 @@ function MapFun() {
 
                 {/* code em here bois */}
                 {rivers.map(river => {
-                    return <Overlay name={river} key={river}>
+                    return river === ""||river === null ? null: <Overlay name={river} key={river}>
                         <LayerGroup name={"lgroup" + river}>
+                        <MarkerClusterGroup>
                             {markers.locations.map(item => {
                                 return item.basin === river ? <Marker position={[item.lat, item.lng]} key={item.id} >
                                     {/* if else case in jsx which is somehow not what im used to at all coming from basically oop only works */}
@@ -155,6 +154,7 @@ function MapFun() {
                             }
                             )
                             }
+                            </MarkerClusterGroup>
                         </LayerGroup>
                     </Overlay>
                 })}
