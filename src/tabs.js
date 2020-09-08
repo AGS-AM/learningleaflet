@@ -4,6 +4,7 @@ import { AppBar, Tabs, Tab, Box } from '@material-ui/core'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination } from '@material-ui/core'
 import { Paper } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
+import Maps from "./maps"
 //paper is used to make it look like a piece of paper
 
 //get the thingy based on station type and populate the tabs with stuff like a graph ?!? on the type R and smth
@@ -31,7 +32,6 @@ async function fetchData() {
     return result.data.locations;
 }
 function tableMaker(rows,lookat) {
-
     const useStyles = makeStyles({
         table: {
             minWidth: 650,
