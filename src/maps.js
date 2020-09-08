@@ -33,6 +33,7 @@ function MapFun() {
             // './resource/station_full.json',
         );
         result.data.locations.forEach(element => {
+            // console.log(element.station_type);
             element.basin = element.basin || "Empty";
         });
         //console.log(result.data.locations);
@@ -108,6 +109,10 @@ function MapFun() {
                 {
                     name: "random stuff",
                     data: somuchtemp
+                },
+                {
+                    name: "one two three",
+                    data: [1,2,3,3,2,1]
                 }
             ]
         })
