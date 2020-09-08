@@ -7,6 +7,8 @@ import distinct from 'distinct';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import { Button } from '@material-ui/core';
 
+//could potentially create a func to make the graph here based each marker
+
 function MapFun() {
     const [controlSet] = useState(
         {
@@ -45,12 +47,11 @@ function MapFun() {
             tempinfo.forEach(element => {
                 temp2.push(element.basin)
             });
-            // console.log("temp");
+            //console.log(tempinfo);
             // console.log(distinct(temp2));
             setRivers(distinct(temp2));
             return distinct(temp2);
         }
-
     }, []);
     const mapRef = useRef();
     useEffect(() => {
@@ -63,9 +64,9 @@ function MapFun() {
     }, [mapRef]);
     const { BaseLayer, Overlay } = LayersControl;
 
-    const [option] = useState(
+    const [option, setOptions] = useState(
         {
-
+            //change the settings in the useeffect
             chart: {
                 height: 400,
                 width: 260,
@@ -81,10 +82,33 @@ function MapFun() {
             ]
         }
     )
-    
+
     const [flipflop, setflip] = useState(false);
     const clicked = () => setflip(!flipflop);
-    
+    var hiRef = useRef();
+    function markerOnClick(e)
+    {
+        var somuchtemp = e.geocode.split('').map(function(item) {
+            return parseInt(item, 10);
+        });
+        //console.log(somuchtemp);
+        //dun work properly dough esk de
+        setOptions({
+        chart: {
+            height: 400,
+            width: 260,
+        },
+        title: {
+            text: e.name
+        },
+        series: [
+            {   name : "random stuff",
+                data:  somuchtemp
+            }
+        ]
+    })
+    //console.log("hi. you clicked the marker");
+    }
 
 
     return (
@@ -146,10 +170,9 @@ function MapFun() {
                             <LayerGroup name={"lgroup" + river}>
                                 <MarkerClusterGroup>
                                     {markers.locations.map(item => {
-                                        return item.basin === river ? <Marker position={[item.lat, item.lng]} key={item.id} >
+                                        return item.basin === river ? <Marker position={[item.lat, item.lng]} key={item.id} onclick = {e =>markerOnClick(item)} >
                                             <Popup>
-
-                                            {flipflop === true ? <HighchartsReact highcharts={Highcharts} options={option} />: null}
+                                                {flipflop === true ? <HighchartsReact highcharts={Highcharts} options={option} ref={hiRef}/> : null}
                                                 <div id={item.id + "_test"}>
                                                     <h4>ID: {item.id}</h4>
                                                     {item.name}
@@ -160,7 +183,7 @@ function MapFun() {
                                                     <br></br>
                                     Basin Name : {item.basin}
                                                 </div>
-                                                <Button variant="contained" color="primary" onClick={clicked}>BOB</Button>
+                                                <Button variant="contained" color={flipflop===false ? "primary" : "secondary"} onClick={clicked}>BOB</Button>
                                             </Popup>
                                         </Marker> : null
                                     }
