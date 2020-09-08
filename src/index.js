@@ -9,6 +9,7 @@ import TabsInfo from './tabs';
 ReactDOM.render(
   <React.StrictMode>
     <MapFun />
+    <TabsInfo />
   </React.StrictMode>,
   document.getElementById('root')
 );
@@ -18,12 +19,6 @@ ReactDOM.render(
 //   </React.StrictMode>,
 //   document.getElementById('root2')
 // );
-ReactDOM.render(
-  <React.StrictMode>
-    <TabsInfo />
-  </React.StrictMode>,
-  document.getElementById('root2')
-);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

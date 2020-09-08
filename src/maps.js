@@ -86,28 +86,28 @@ function MapFun() {
     const [flipflop, setflip] = useState(false);
     const clicked = () => setflip(!flipflop);
     var hiRef = useRef();
-    function markerOnClick(e)
-    {
-        var somuchtemp = e.geocode.split('').map(function(item) {
+    function markerOnClick(e) {
+        var somuchtemp = e.geocode.split('').map(function (item) {
             return parseInt(item, 10);
         });
         //console.log(somuchtemp);
         //dun work properly dough esk de
         setOptions({
-        chart: {
-            height: 400,
-            width: 260,
-        },
-        title: {
-            text: e.name
-        },
-        series: [
-            {   name : "random stuff",
-                data:  somuchtemp
-            }
-        ]
-    })
-    //console.log("hi. you clicked the marker");
+            chart: {
+                height: 400,
+                width: 260,
+            },
+            title: {
+                text: e.name
+            },
+            series: [
+                {
+                    name: "random stuff",
+                    data: somuchtemp
+                }
+            ]
+        })
+        //console.log("hi. you clicked the marker");
     }
 
 
@@ -138,6 +138,7 @@ function MapFun() {
                         maxNativeZoom={8}
                     />
                 </BaseLayer>
+                
                 {rivers.map(river => {
                     return river === "" || river === null ?
                         /*<Overlay name="Unknown" key="Unknown">
@@ -167,33 +168,33 @@ function MapFun() {
                         //Nulled due to the fact that "" and null was not merged
                         null
                         :
-                        <Overlay name={river} key={river}>
-                            <LayerGroup name={"lgroup" + river}>
-                                <MarkerClusterGroup>
-                                    {markers.locations.map(item => {
-                                        return item.basin === river ? <Marker position={[item.lat, item.lng]} key={item.id} onclick = {e =>markerOnClick(item)} >
-                                            <Popup>
-                                                {flipflop === true ? <HighchartsReact highcharts={Highcharts} options={option} ref={hiRef}/> : null}
-                                                <div id={item.id + "_test"}>
-                                                    <h4>ID: {item.id}</h4>
-                                                    {item.name}
-                                                    <br></br>
+                            <Overlay name={river} key={river}>
+                                <LayerGroup name={"lgroup" + river}>
+                                    <MarkerClusterGroup>
+                                        {markers.locations.map(item => {
+                                            return item.basin === river ? <Marker position={[item.lat, item.lng]} key={item.id} onclick={e => markerOnClick(item)} >
+                                                <Popup>
+                                                    {flipflop === true ? <HighchartsReact highcharts={Highcharts} options={option} ref={hiRef} /> : null}
+                                                    <div id={item.id + "_test"}>
+                                                        <h4>ID: {item.id}</h4>
+                                                        {item.name}
+                                                        <br></br>
                                     Lat : {item.lat}
                                     &nbsp;&nbsp;&nbsp;&nbsp;
                                     Long : {item.lng}
-                                                    <br></br>
+                                                        <br></br>
                                     Basin Name : {item.basin}
-                                                </div>
-                                                <Button variant="contained" color={flipflop===false ? "primary" : "secondary"} onClick={clicked}>BOB</Button>
-                                            </Popup>
-                                        </Marker> : null
-                                    }
-                                    )
-                                    }
-                                </MarkerClusterGroup>
-                            </LayerGroup>
-                        </Overlay>
-
+                                                    </div>
+                                                    <Button variant="contained" color={flipflop === false ? "primary" : "secondary"} onClick={clicked}>BOB</Button>
+                                                </Popup>
+                                            </Marker> : null
+                                        }
+                                        )
+                                        }
+                                    </MarkerClusterGroup>
+                                </LayerGroup>
+                            </Overlay>
+                        
                 })}
 
             </LayersControl>
