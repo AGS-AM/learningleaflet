@@ -92,6 +92,7 @@ function MapFun() {
     const clicked = () => setflip(!flipflop);
     var hiRef = useRef();
     function markerOnClick(e) {
+        setflip(false)
         var somuchtemp = e.geocode.split('').map(function (item) {
             return parseInt(item, 10);
         });
