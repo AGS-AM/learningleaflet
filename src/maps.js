@@ -112,6 +112,7 @@ function MapFun() {
 
 
     return (
+        //totally feel like this is all clunky and not organized
         <LeafletMap ref={mapRef}
             center={controlSet.center}
             zoom={controlSet.zoom}
