@@ -4,6 +4,7 @@ import './index.css';
 import * as serviceWorker from './serviceWorker';
 import MapFun from './maps';
 import Charts from './charts';
+import TabsInfo from './tabs';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -11,9 +12,15 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
+// ReactDOM.render(
+//   <React.StrictMode>
+//     <Charts />
+//   </React.StrictMode>,
+//   document.getElementById('root2')
+// );
 ReactDOM.render(
   <React.StrictMode>
-    <Charts />
+    <TabsInfo />
   </React.StrictMode>,
   document.getElementById('root2')
 );
