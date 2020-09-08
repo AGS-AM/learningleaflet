@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import { AppBar, Tabs, Tab, Box } from '@material-ui/core'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination } from '@material-ui/core'
+import { Paper } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles';
+//paper is used to make it look like a piece of paper
 
 //get the thingy based on station type and populate the tabs with stuff like a graph ?!? on the type R and smth
 function TabPanel(props) {
@@ -23,8 +27,45 @@ async function fetchData() {
     //     // console.log(element.station_type);
     //     element.basin = element.basin || "Empty";
     // });
-    //.log(result.data);
+    console.log(result.data);
     return result.data.locations;
+}
+function tableMaker(rows,lookat) {
+
+    const useStyles = makeStyles({
+        table: {
+            minWidth: 650,
+        },
+    });
+    const classes = useStyles;
+    return (
+        <TableContainer component={Paper}>
+            <Table className={classes.table} aria-label="simple table">
+                <TableHead>
+                    <TableRow>
+                        <TableCell align="center">ID</TableCell>
+                        <TableCell align="center">Name</TableCell>
+                        <TableCell align="center">Lat</TableCell>
+                        <TableCell align="center">Long</TableCell>
+                        <TableCell align="center">Basin</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {rows.map((row) => (row.station_type === lookat ?
+                        <TableRow key={row.id}>
+                            <TableCell component="th" scope="row" align="center">
+                                {row.id}
+                            </TableCell>
+                            <TableCell align="center">{row.name}</TableCell>
+                            <TableCell align="center">{row.lat}</TableCell>
+                            <TableCell align="center">{row.lng}</TableCell>
+                            <TableCell align="center">{row.basin}</TableCell>
+                        </TableRow>:null
+                    ))}
+                </TableBody>
+            </Table>
+        </TableContainer>
+    );
 }
 function TabsInfo() {
     // console.log(fetchData());
@@ -39,8 +80,6 @@ function TabsInfo() {
             tempinfo = await fetchData();
             setfetchedJson(tempinfo)
             console.log(fetchedJson);
-            // console.log(distinct(temp2));
-
         }
         waitforFetch()
     }, []);
@@ -53,18 +92,14 @@ function TabsInfo() {
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
-                {/* do the predefine row and stuff and use loop with the if case to check A R and add them to page per page  */}
-                {/* fetchedJson mapped here like the markers location maps in the maps file so it technically should work fine right here Woooh 
-                Next order of business is to get a working table onto tihs page and on and on and on
-             */}
-                {fetchedJson.map(item => {
-                    return item.station_type === "R" ? <p key={item.id}>{item.name + " " + item.station_type}</p> : null
-                })}
+                {
+                    tableMaker(fetchedJson,"R")
+                }
             </TabPanel>
             <TabPanel value={value} index={1}>
-                {fetchedJson.map(item => {
-                    return item.station_type === "A" ? <p key={item.id}>{item.name + " " + item.station_type}</p> : null
-                })}
+                {
+                    tableMaker(fetchedJson,"A")
+                }
             </TabPanel>
         </>
     );
