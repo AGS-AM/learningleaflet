@@ -32,6 +32,10 @@ function MapFun() {
             // this is the one that points to TH 
             // './resource/station_full.json',
         );
+        result.data.locations.forEach(element => {
+            element.basin = element.basin || "Empty";
+        });
+        //console.log(result.data.locations);
         setMarkers(result.data);
         return result.data.locations;
     };
@@ -140,35 +144,7 @@ function MapFun() {
                 </BaseLayer>
                 
                 {rivers.map(river => {
-                    return river === "" || river === null ?
-                        /*<Overlay name="Unknown" key="Unknown">
-                            <LayerGroup name={"lgroup" + "Unknown"}>
-                                <MarkerClusterGroup>
-                                    {markers.locations.map(item => {
-                                        return item.basin === river ? <Marker position={[item.lat, item.lng]} key={item.id} >
-                                            
-                                            <Popup>
-                                                <HighchartsReact highcharts={Highcharts} options={option} />
-                                                <div id={item.id + "_test"}>
-                                                    <h4>ID: {item.id}</h4>
-                                                    {item.name}
-                                                    <br></br>
-                                    Lat : {item.lat}
-                                    &nbsp;&nbsp;&nbsp;&nbsp;
-                                    Long : {item.lng}
-                                                    <br></br>
-                                    Basin Name : {item.basin}
-                                                </div>
-                                            </Popup>
-                                        </Marker> : null
-                                    })}
-                                </MarkerClusterGroup>
-                            </LayerGroup>
-                        </Overlay>*/
-                        //Nulled due to the fact that "" and null was not merged
-                        null
-                        :
-                            <Overlay name={river} key={river}>
+                    return  <Overlay name={river} key={river}>
                                 <LayerGroup name={"lgroup" + river}>
                                     <MarkerClusterGroup>
                                         {markers.locations.map(item => {
