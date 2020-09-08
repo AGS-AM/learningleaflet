@@ -44,7 +44,6 @@ function TabsInfo() {
         }
         waitforFetch()
     }, []);
-    //We are using value which is the one controlling the onChange handleChange, so we only run the fetch once per page change 
     return (
         <>
             <AppBar position="static">

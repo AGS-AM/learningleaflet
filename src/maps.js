@@ -43,6 +43,7 @@ function MapFun() {
     const [markers, setMarkers] = useState({ locations: [] });
     const [rivers, setRivers] = useState([])
     useEffect(() => {
+        console.log("useEffect1");
         waitforFetch();
         var tempinfo = [];
         var temp2 = [];
@@ -60,6 +61,7 @@ function MapFun() {
     }, []);
     const mapRef = useRef();
     useEffect(() => {
+        console.log("useEffect2");
         const { current = {} } = mapRef;
         const { leafletElement: map } = current;
         // console.log(map);
@@ -92,6 +94,7 @@ function MapFun() {
     const clicked = () => setflip(!flipflop);
     var hiRef = useRef();
     function markerOnClick(e) {
+        console.log("markerClicked");
         setflip(false)
         var somuchtemp = e.geocode.split('').map(function (item) {
             return parseInt(item, 10);
