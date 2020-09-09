@@ -6,7 +6,8 @@ import { Paper } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import { AppContext } from './App'
 import { Button } from '@material-ui/core';
-import {Icon} from '@material-ui/core';
+import { Icon } from '@material-ui/core';
+import MaterialTable from 'material-table';
 //paper is used to make it look like a piece of paper
 
 //get the thingy based on station type and populate the tabs with stuff like a graph ?!? on the type R and smth
@@ -85,13 +86,18 @@ function TabsInfo() {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-    const [fetchedJson, setfetchedJson] = useState([]);
+    const [purgeA, setpurgeA] = useState([]);
+    const [purgeR, setpurgeR] = useState([]);
     useEffect(() => {
         var tempinfo = [];
+        var tempA =[];
+        var tempR =[];
         async function waitforFetch() {
             tempinfo = await fetchData();
-            setfetchedJson(tempinfo)
-            //console.log(fetchedJson);
+            tempinfo.map((row) => (row.station_type === "A" ? state.inputArray.indexOf(row.basin) !== -1 ? tempA.push(row) :null:null))
+            setpurgeA(tempA)
+            tempinfo.map((row) => (row.station_type === "R" ? state.inputArray.indexOf(row.basin) !== -1 ? tempR.push(row) :null:null))
+            setpurgeR(tempR)
         }
         waitforFetch()
     }, [state.inputArray]);
@@ -113,77 +119,104 @@ function TabsInfo() {
             </AppBar>
             <TabPanel value={value} index={0}>
                 {
-                    <TableContainer component={Paper}>
-                        <Table className={classes.table} aria-label="simple table">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell align="center">ID</TableCell>
-                                    <TableCell align="center">Name</TableCell>
-                                    <TableCell align="center">Lat</TableCell>
-                                    <TableCell align="center">Long</TableCell>
-                                    <TableCell align="center">GoTo</TableCell>
-
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {/* bring in the filter from somewhere else would be better */}
-                                {fetchedJson.map((row) => (row.station_type === "R"
-                                    ? state.inputArray.indexOf(row.basin) !== -1 ?
-                                        <TableRow key={row.id}>
-                                            <TableCell component="th" scope="row" align="center">
-                                                {row.id}
-                                            </TableCell>
-                                            <TableCell align="center">{row.name}</TableCell>
-                                            <TableCell align="center">{row.lat}</TableCell>
-                                            <TableCell align="center">{row.lng}</TableCell>
-                                            <TableCell align="center"><Button variant="contained" endIcon={<Icon>send</Icon>} color="primary" onClick={e => dispatch({ type: 'UPDATE_INPUT', layer: state.inputArray, fly: [row.lat, row.lng, 15] })}>Weee</Button></TableCell>
-                                        </TableRow>
-                                        : null
-                                    : null
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                    <MaterialTable
+                        columns={[
+                            {
+                                title: "ID",
+                                field: "id"
+                            },
+                            {
+                                title: "Name",
+                                field: "name"
+                            },
+                            {
+                                title: "Lat",
+                                field: "lat"
+                            },
+                            {
+                                title: "Long",
+                                field: "lng"
+                            },
+                        ]}
+                        data={purgeA}
+                        //create a func above doing the same thing eg. purgeA = fetchedJson.map ? : null and so on
+                        actions={[
+                            {
+                                tooltip: "Fly to in MAP",
+                                onClick: (event, rowData) => dispatch({ type: 'UPDATE_INPUT', layer: state.inputArray, fly: [rowData.lat, rowData.lng, 15] })
+                            }
+                        ]}
+                        components={{
+                            Action: (props) => (
+                                <Button
+                                    onClick={(event) => props.action.onClick(event, props.data)}
+                                    color="primary"
+                                    variant="contained"
+                                    style={{ textTransform: "none" }}
+                                    size="small"
+                                >
+                                    Fly To
+                                </Button>
+                            )
+                        }}
+                        options={{
+                            actionsColumnIndex: -1
+                        }}
+                    />
                 }
             </TabPanel>
             <TabPanel value={value} index={1}>
                 {
-                    <TableContainer component={Paper}>
-                        <Table className={classes.table} aria-label="simple table">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell align="center">ID</TableCell>
-                                    <TableCell align="center">Name</TableCell>
-                                    <TableCell align="center">Lat</TableCell>
-                                    <TableCell align="center">Long</TableCell>
-                                    <TableCell align="center">GoTo</TableCell>
-
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {/* bring in the filter from somewhere else would be better */}
-                                {fetchedJson.map((row) => (row.station_type === "A"
-                                    ? state.inputArray.indexOf(row.basin) !== -1 ?
-                                        <TableRow key={row.id}>
-                                            <TableCell component="th" scope="row" align="center">
-                                                {row.id}
-                                            </TableCell>
-                                            <TableCell align="center">{row.name}</TableCell>
-                                            <TableCell align="center">{row.lat}</TableCell>
-                                            <TableCell align="center">{row.lng}</TableCell>
-                                            <TableCell align="center"><Button variant="contained" endIcon={<Icon>send</Icon>} color="primary" onClick={e => dispatch({ type: 'UPDATE_INPUT', layer: state.inputArray, fly: [row.lat, row.lng, 15] })}>Weee</Button></TableCell>
-                                        </TableRow>
-                                        : null
-                                    : null
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                    <MaterialTable
+                        columns={[
+                            {
+                                title: "ID",
+                                field: "id"
+                            },
+                            {
+                                title: "Name",
+                                field: "name"
+                            },
+                            {
+                                title: "Lat",
+                                field: "lat"
+                            },
+                            {
+                                title: "Long",
+                                field: "lng"
+                            },
+                        ]}
+                        data={purgeR}
+                        //create a func above doing the same thing eg. purgeA = fetchedJson.map ? : null and so on
+                        actions={[
+                            {
+                                tooltip: "Fly to in MAP",
+                                onClick: (event, rowData) => dispatch({ type: 'UPDATE_INPUT', layer: state.inputArray, fly: [rowData.lat, rowData.lng, 15] })
+                            }
+                        ]}
+                        components={{
+                            Action: (props) => (
+                                <Button
+                                    onClick={(event) => props.action.onClick(event, props.data)}
+                                    color="primary"
+                                    variant="contained"
+                                    style={{ textTransform: "none" }}
+                                    size="small"
+                                >
+                                    Fly To
+                                </Button>
+                            )
+                        }}
+                        options={{
+                            actionsColumnIndex: -1
+                        }}
+                    />
                 }
             </TabPanel>
         </>
     );
 
 }
+
 
 export default TabsInfo
