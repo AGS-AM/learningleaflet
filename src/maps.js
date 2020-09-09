@@ -92,7 +92,7 @@ function MapFun() {
         // setTimeout(() => {
         //     map.flyTo([10, 100], 6, { duration: 3 })
         // }, 1000);
-    }, [dispatch]);
+    },);
     const { BaseLayer, Overlay } = LayersControl;
 
     const [option, setOptions] = useState(

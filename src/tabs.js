@@ -100,7 +100,7 @@ function TabsInfo() {
             setpurgeR(tempR)
         }
         waitforFetch()
-        console.log(state.inputArray);
+       // console.log(state.inputArray);
     }, [state.inputArray.length]);
     //length fixed it
 //need to create a new effect so this aint pulling every damn time something
