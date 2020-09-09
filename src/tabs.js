@@ -101,7 +101,7 @@ function TabsInfo() {
         }
         waitforFetch()
     }, [state]);
-//need to create a new effect so this aint pulling every damn time something happens
+//need to create a new effect so this aint pulling every damn time something
     const useStyles = makeStyles({
         table: {
             minWidth: 650,
