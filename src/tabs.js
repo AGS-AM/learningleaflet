@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react'
 import axios from 'axios';
 import { AppBar, Tabs, Tab, Box } from '@material-ui/core'
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination } from '@material-ui/core'
-import { Paper } from '@material-ui/core'
+// import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination } from '@material-ui/core'
+// import { Paper } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import { AppContext } from './App'
 import { Button } from '@material-ui/core';
-import { Icon } from '@material-ui/core';
+// import { Icon } from '@material-ui/core';
 import MaterialTable from 'material-table';
 //paper is used to make it look like a piece of paper
 
@@ -100,8 +100,8 @@ function TabsInfo() {
             setpurgeR(tempR)
         }
         waitforFetch()
-    }, [state.inputArray]);
-
+    }, [state]);
+//need to create a new effect so this aint pulling every damn time something happens
     const useStyles = makeStyles({
         table: {
             minWidth: 650,
@@ -138,7 +138,7 @@ function TabsInfo() {
                                 field: "lng"
                             },
                         ]}
-                        data={purgeA}
+                        data={purgeR}
                         //create a func above doing the same thing eg. purgeA = fetchedJson.map ? : null and so on
                         actions={[
                             {
@@ -186,7 +186,7 @@ function TabsInfo() {
                                 field: "lng"
                             },
                         ]}
-                        data={purgeR}
+                        data={purgeA}
                         //create a func above doing the same thing eg. purgeA = fetchedJson.map ? : null and so on
                         actions={[
                             {
