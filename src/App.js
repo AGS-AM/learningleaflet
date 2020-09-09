@@ -5,16 +5,19 @@ import Charts from './charts';
 import TabsInfo from './tabs';
 
 export const AppContext = React.createContext();
+
 const initialState = {
 
   inputArray: ["null",""],
+  inputFly: [13,100,6],
 
 };
 function reducer(state, action) {
   switch (action.type) {
     case 'UPDATE_INPUT':
       return {
-        inputArray: action.data
+        inputArray: action.layer,
+        inputFly: action.fly,
       };
 
 
@@ -29,9 +32,7 @@ function App() {
   return (
     <div className="App">
       <AppContext.Provider value={{ state, dispatch }}>
-        {console.log("loaded Map")}
         <MapFun />
-        {console.log("loaded Tabs")}
         <TabsInfo />
       </AppContext.Provider>
     </div>

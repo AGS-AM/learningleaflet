@@ -12,12 +12,12 @@ import { AppContext } from './App'
 
 function MapFun() {
 
-    const {state, dispatch} = useContext(AppContext);
-    console.log("Maps");
-    console.log(state);
+    const { state, dispatch } = useContext(AppContext);
+    //console.log("Maps");
+    //console.log(state);
     const [controlSet] = useState(
         {
-            center: [10, 100],//Start Location
+            center: [99, 100],//Start Location
             zoom: 6,
             maxZoom: 16, //changed to 8 to be same with nasa
             attributionControl: true,
@@ -38,17 +38,17 @@ function MapFun() {
             // './resource/station_full.json',
         );
         result.data.locations.forEach(element => {
-            // console.log(element.station_type);
+            //console.log(element.station_type);
             element.basin = element.basin || "Empty";
         });
-        //console.log(result.data.locations);
+        ////console.log(result.data.locations);
         setMarkers(result.data);
         return result.data.locations;
     };
     const [markers, setMarkers] = useState({ locations: [] });
     const [rivers, setRivers] = useState([])
     useEffect(() => {
-        console.log("useEffect1");
+        //console.log("useEffect1");
         waitforFetch();
         var tempinfo = [];
         var temp2 = [];
@@ -58,37 +58,36 @@ function MapFun() {
             tempinfo.forEach(element => {
                 temp2.push(element.basin)
             });
-            //console.log(tempinfo);
-            // console.log(distinct(temp2));
+            ////console.log(tempinfo);
+            //console.log(distinct(temp2));
             setRivers(distinct(temp2));
             return distinct(temp2);
         }
     }, []);
     const mapRef = useRef();
-    var tobepushed =[];
-    useEffect(()=>
-    {
-        const { current = {} } = mapRef;
-        const { leafletElement: map } = current;
-        setTimeout(() => {
-            map.flyTo([10, 100], 6, { duration: 3 })
-        }, 1000);
-        console.log("stateChanged");
-    },[state]);
+    var tobepushed = [];
     useEffect(() => {
-        console.log("useEffect2");
         const { current = {} } = mapRef;
         const { leafletElement: map } = current;
-        map.on("overlayadd", e=>{
+
+        setTimeout(() => {
+            map.flyTo([state.inputFly[0], state.inputFly[1]], state.inputFly[2], { duration: 3 })
+        }, 500);
+        //console.log("stateChanged");
+    }, [state.inputFly]);
+    useEffect(() => {
+        //console.log("useEffect2");
+        const { current = {} } = mapRef;
+        const { leafletElement: map } = current;
+        map.on("overlayadd", e => {
             tobepushed.push(e.name);
-            dispatch({ type: 'UPDATE_INPUT', data: tobepushed,});
-            console.log(e.name+"add");
+            dispatch({ type: 'UPDATE_INPUT', layer: tobepushed, fly: state.inputFly });
+            //console.log(e.name+"add");
         })
-        map.on("overlayremove", e=>{
-            for(var i = 0; i<tobepushed.length; i++)
-            {if(tobepushed[i]===e.name){tobepushed.splice(i,1)}}
-            dispatch({ type: 'UPDATE_INPUT', data: tobepushed,});
-            console.log(e.name+"poof");
+        map.on("overlayremove", e => {
+            for (var i = 0; i < tobepushed.length; i++) { if (tobepushed[i] === e.name) { tobepushed.splice(i, 1) } }
+            dispatch({ type: 'UPDATE_INPUT', layer: tobepushed, fly: state.inputFly });
+            //console.log(e.name+"poof");
         })
         // setTimeout(() => {
         //     map.flyTo([10, 100], 6, { duration: 3 })
@@ -116,12 +115,12 @@ function MapFun() {
     )
 
     function markerOnClick(e) {
-        console.log("markerClicked");
+        //console.log("markerClicked");
         setflip(false)
         var somuchtemp = e.geocode.split('').map(function (item) {
             return parseInt(item, 10);
         });
-        //console.log(somuchtemp);
+        ////console.log(somuchtemp);
         //dun work properly dough esk de
         setOptions({
             chart: {
@@ -138,11 +137,11 @@ function MapFun() {
                 },
                 {
                     name: "one two three",
-                    data: [1,2,3,3,2,1]
+                    data: [1, 2, 3, 3, 2, 1]
                 }
             ]
         })
-        //console.log("hi. you clicked the marker");
+        ////console.log("hi. you clicked the marker");
     }
 
     const [flipflop, setflip] = useState(false);
@@ -175,35 +174,35 @@ function MapFun() {
                         maxNativeZoom={8}
                     />
                 </BaseLayer>
-                
+
                 {rivers.map(river => {
-                    return  <Overlay name={river} key={river}>
-                                <LayerGroup name={"lgroup" + river}>
-                                    <MarkerClusterGroup>
-                                        {markers.locations.map(item => {
-                                            return item.basin === river ? <Marker position={[item.lat, item.lng]} key={item.id} onclick={e => markerOnClick(item)} >
-                                                <Popup>
-                                                    {flipflop === true ? <HighchartsReact highcharts={Highcharts} options={option} ref={hiRef} /> : null}
-                                                    <div id={item.id + "_test"}>
-                                                        <h4>ID: {item.id}</h4>
-                                                        {item.name}
-                                                        <br></br>
+                    return <Overlay name={river} key={river}>
+                        <LayerGroup name={"lgroup" + river}>
+                            <MarkerClusterGroup>
+                                {markers.locations.map(item => {
+                                    return item.basin === river ? <Marker position={[item.lat, item.lng]} key={item.id} onclick={e => markerOnClick(item)} >
+                                        <Popup>
+                                            {flipflop === true ? <HighchartsReact highcharts={Highcharts} options={option} ref={hiRef} /> : null}
+                                            <div id={item.id + "_test"}>
+                                                <h4>ID: {item.id}</h4>
+                                                {item.name}
+                                                <br></br>
                                     Lat : {item.lat}
                                     &nbsp;&nbsp;&nbsp;&nbsp;
                                     Long : {item.lng}
-                                                        <br></br>
+                                                <br></br>
                                     Basin Name : {item.basin}
-                                                    </div>
-                                                    <Button variant="contained" color={flipflop === false ? "primary" : "secondary"} onClick={clicked}>BOB</Button>
-                                                </Popup>
-                                            </Marker> : null
-                                        }
-                                        )
-                                        }
-                                    </MarkerClusterGroup>
-                                </LayerGroup>
-                            </Overlay>
-                        
+                                            </div>
+                                            <Button variant="contained" color={flipflop === false ? "primary" : "secondary"} onClick={clicked}>BOB</Button>
+                                        </Popup>
+                                    </Marker> : null
+                                }
+                                )
+                                }
+                            </MarkerClusterGroup>
+                        </LayerGroup>
+                    </Overlay>
+
                 })}
 
             </LayersControl>
