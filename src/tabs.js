@@ -6,6 +6,7 @@ import { Paper } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import { AppContext } from './App'
 import { Button } from '@material-ui/core';
+import {Icon} from '@material-ui/core';
 //paper is used to make it look like a piece of paper
 
 //get the thingy based on station type and populate the tabs with stuff like a graph ?!? on the type R and smth
@@ -135,7 +136,7 @@ function TabsInfo() {
                                             <TableCell align="center">{row.name}</TableCell>
                                             <TableCell align="center">{row.lat}</TableCell>
                                             <TableCell align="center">{row.lng}</TableCell>
-                                            <TableCell align="center"><Button variant="contained" color="primary" onClick={e => dispatch({ type: 'UPDATE_INPUT', layer: state.inputArray, fly: [row.lat, row.lng, 11] })}>Weee</Button></TableCell>
+                                            <TableCell align="center"><Button variant="contained" endIcon={<Icon>send</Icon>} color="primary" onClick={e => dispatch({ type: 'UPDATE_INPUT', layer: state.inputArray, fly: [row.lat, row.lng, 15] })}>Weee</Button></TableCell>
                                         </TableRow>
                                         : null
                                     : null
@@ -170,7 +171,7 @@ function TabsInfo() {
                                             <TableCell align="center">{row.name}</TableCell>
                                             <TableCell align="center">{row.lat}</TableCell>
                                             <TableCell align="center">{row.lng}</TableCell>
-                                            <TableCell align="center"><Button variant="contained" color="primary" onClick={e => dispatch({ type: 'UPDATE_INPUT', layer: state.inputArray, fly: [row.lat, row.lng, 11] })}>Weee</Button></TableCell>
+                                            <TableCell align="center"><Button variant="contained" endIcon={<Icon>send</Icon>} color="primary" onClick={e => dispatch({ type: 'UPDATE_INPUT', layer: state.inputArray, fly: [row.lat, row.lng, 15] })}>Weee</Button></TableCell>
                                         </TableRow>
                                         : null
                                     : null
