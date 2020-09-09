@@ -8,7 +8,6 @@ export const AppContext = React.createContext();
 const initialState = {
 
   inputArray: ["null",""],
-  inputFly: [10,100],
 
 };
 function reducer(state, action) {
@@ -17,10 +16,7 @@ function reducer(state, action) {
       return {
         inputArray: action.data
       };
-    case 'UPDATE_FLY':
-      return{
-        inputFly: action.data
-      };
+
 
     default:
       return initialState;

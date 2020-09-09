@@ -32,15 +32,15 @@ async function fetchData() {
     console.log(result.data);
     return result.data.locations;
 }
+
 function tableMaker(rows, lookat, inputBasin) {
-    console.log(inputBasin);
-    console.log("testbasin");
     const useStyles = makeStyles({
         table: {
             minWidth: 650,
         },
     });
     const classes = useStyles;
+
     return (
         <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="simple table">
@@ -51,22 +51,23 @@ function tableMaker(rows, lookat, inputBasin) {
                         <TableCell align="center">Lat</TableCell>
                         <TableCell align="center">Long</TableCell>
                         <TableCell align="center">Basin</TableCell>
-                        
+
                     </TableRow>
                 </TableHead>
                 <TableBody>
+                {/* bring in the filter from somewhere else would be better */}
                     {rows.map((row) => (row.station_type === lookat
                         ? inputBasin.indexOf(row.basin) !== -1 ?
-                         <TableRow key={row.id}>
-                            <TableCell component="th" scope="row" align="center">
-                                {row.id}
-                            </TableCell>
-                            <TableCell align="center">{row.name}</TableCell>
-                            <TableCell align="center">{row.lat}</TableCell>
-                            <TableCell align="center">{row.lng}</TableCell>
-                            <TableCell align="center"><Button variant="contained" color="primary" onClick={e => console.log(row.id)}>BOB</Button></TableCell>
-                        </TableRow>
-                        : null
+                            <TableRow key={row.id}>
+                                <TableCell component="th" scope="row" align="center">
+                                    {row.id}
+                                </TableCell>
+                                <TableCell align="center">{row.name}</TableCell>
+                                <TableCell align="center">{row.lat}</TableCell>
+                                <TableCell align="center">{row.lng}</TableCell>
+                                <TableCell align="center"><Button variant="contained" color="primary" onClick={e => console.log(row.id)}>BOB</Button></TableCell>
+                            </TableRow>
+                            : null
                         : null
                     ))}
                 </TableBody>
