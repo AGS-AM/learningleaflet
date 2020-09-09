@@ -135,7 +135,7 @@ function TabsInfo() {
                                             <TableCell align="center">{row.name}</TableCell>
                                             <TableCell align="center">{row.lat}</TableCell>
                                             <TableCell align="center">{row.lng}</TableCell>
-                                            <TableCell align="center"><Button variant="contained" color="primary" onClick={e => dispatch({ type: 'UPDATE_INPUT', layer: state.inputArray, fly:[row.lat,row.lng,11]})}>Weee</Button></TableCell>
+                                            <TableCell align="center"><Button variant="contained" color="primary" onClick={e => dispatch({ type: 'UPDATE_INPUT', layer: state.inputArray, fly: [row.lat, row.lng, 11] })}>Weee</Button></TableCell>
                                         </TableRow>
                                         : null
                                     : null
@@ -170,7 +170,7 @@ function TabsInfo() {
                                             <TableCell align="center">{row.name}</TableCell>
                                             <TableCell align="center">{row.lat}</TableCell>
                                             <TableCell align="center">{row.lng}</TableCell>
-                                            <TableCell align="center"><Button variant="contained" color="primary" onClick={e => dispatch({ type: 'UPDATE_INPUT', layer: state.inputArray, fly:[row.lat,row.lng,11]})}>Weee</Button></TableCell>
+                                            <TableCell align="center"><Button variant="contained" color="primary" onClick={e => dispatch({ type: 'UPDATE_INPUT', layer: state.inputArray, fly: [row.lat, row.lng, 11] })}>Weee</Button></TableCell>
                                         </TableRow>
                                         : null
                                     : null

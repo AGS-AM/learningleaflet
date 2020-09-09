@@ -8,8 +8,8 @@ export const AppContext = React.createContext();
 
 const initialState = {
 
-  inputArray: ["null",""],
-  inputFly: [13,100,6],
+  inputArray: ["null", ""],
+  inputFly: [13, 100, 6],
 
 };
 function reducer(state, action) {
