@@ -2,14 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
-import MapFun from './maps';
-import Charts from './charts';
-import TabsInfo from './tabs';
+import App from './App'
 
 ReactDOM.render(
   <React.StrictMode>
-    <MapFun />
-    <TabsInfo />
+  <App/>
   </React.StrictMode>,
   document.getElementById('root')
 );

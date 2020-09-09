@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import axios from 'axios';
 import { AppBar, Tabs, Tab, Box } from '@material-ui/core'
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination } from '@material-ui/core'
 import { Paper } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
-import Maps from "./maps"
+import { AppContext } from './App'
+import { Button } from '@material-ui/core';
 //paper is used to make it look like a piece of paper
 
 //get the thingy based on station type and populate the tabs with stuff like a graph ?!? on the type R and smth
@@ -24,14 +25,16 @@ async function fetchData() {
         // this is the one that points to TH 
         // './resource/station_full.json',
     );
-    // result.data.locations.forEach(element => {
-    //     // console.log(element.station_type);
-    //     element.basin = element.basin || "Empty";
-    // });
+    result.data.locations.forEach(element => {
+        // console.log(element.station_type);
+        element.basin = element.basin || "Empty";
+    });
     console.log(result.data);
     return result.data.locations;
 }
-function tableMaker(rows,lookat) {
+function tableMaker(rows, lookat, inputBasin) {
+    console.log(inputBasin);
+    console.log("testbasin");
     const useStyles = makeStyles({
         table: {
             minWidth: 650,
@@ -48,19 +51,23 @@ function tableMaker(rows,lookat) {
                         <TableCell align="center">Lat</TableCell>
                         <TableCell align="center">Long</TableCell>
                         <TableCell align="center">Basin</TableCell>
+                        
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map((row) => (row.station_type === lookat ?
-                        <TableRow key={row.id}>
+                    {rows.map((row) => (row.station_type === lookat
+                        ? inputBasin.indexOf(row.basin) !== -1 ?
+                         <TableRow key={row.id}>
                             <TableCell component="th" scope="row" align="center">
                                 {row.id}
                             </TableCell>
                             <TableCell align="center">{row.name}</TableCell>
                             <TableCell align="center">{row.lat}</TableCell>
                             <TableCell align="center">{row.lng}</TableCell>
-                            <TableCell align="center">{row.basin}</TableCell>
-                        </TableRow>:null
+                            <TableCell align="center"><Button variant="contained" color="primary" onClick={e => console.log(row.id)}>BOB</Button></TableCell>
+                        </TableRow>
+                        : null
+                        : null
                     ))}
                 </TableBody>
             </Table>
@@ -68,6 +75,9 @@ function tableMaker(rows,lookat) {
     );
 }
 function TabsInfo() {
+    const { state, dispatch } = useContext(AppContext);
+    console.log("Tabs");
+    console.log(state.inputArray);
     // console.log(fetchData());
     const [value, setValue] = React.useState(0);
     const handleChange = (event, newValue) => {
@@ -82,7 +92,7 @@ function TabsInfo() {
             console.log(fetchedJson);
         }
         waitforFetch()
-    }, []);
+    }, [state.inputArray]);
     return (
         <>
             <AppBar position="static">
@@ -93,12 +103,12 @@ function TabsInfo() {
             </AppBar>
             <TabPanel value={value} index={0}>
                 {
-                    tableMaker(fetchedJson,"R")
+                    tableMaker(fetchedJson, "R", state.inputArray)
                 }
             </TabPanel>
             <TabPanel value={value} index={1}>
                 {
-                    tableMaker(fetchedJson,"A")
+                    tableMaker(fetchedJson, "A", state.inputArray)
                 }
             </TabPanel>
         </>

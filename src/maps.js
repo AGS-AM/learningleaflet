@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
 import { Map as LeafletMap, TileLayer, Marker, Popup, LayersControl, LayerGroup } from 'react-leaflet';
 import axios from 'axios';
 import Highcharts from 'highcharts';
@@ -6,10 +6,15 @@ import HighchartsReact from 'highcharts-react-official';
 import distinct from 'distinct';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import { Button } from '@material-ui/core';
+import { AppContext } from './App'
 
 //could potentially create a func to make the graph here based each marker
 
 function MapFun() {
+
+    const {state, dispatch} = useContext(AppContext);
+    console.log("Maps");
+    console.log(state);
     const [controlSet] = useState(
         {
             center: [10, 100],//Start Location
@@ -60,15 +65,35 @@ function MapFun() {
         }
     }, []);
     const mapRef = useRef();
+    var tobepushed =[];
+    useEffect(()=>
+    {
+        const { current = {} } = mapRef;
+        const { leafletElement: map } = current;
+        setTimeout(() => {
+            map.flyTo([10, 100], 6, { duration: 3 })
+        }, 1000);
+        console.log("stateChanged");
+    },[state]);
     useEffect(() => {
         console.log("useEffect2");
         const { current = {} } = mapRef;
         const { leafletElement: map } = current;
-        // console.log(map);
-        setTimeout(() => {
-            map.flyTo([10, 100], 6, { duration: 3 })
-        }, 1000);
-    }, [mapRef]);
+        map.on("overlayadd", e=>{
+            tobepushed.push(e.name);
+            dispatch({ type: 'UPDATE_INPUT', data: tobepushed,});
+            console.log(e.name+"add");
+        })
+        map.on("overlayremove", e=>{
+            for(var i = 0; i<tobepushed.length; i++)
+            {if(tobepushed[i]===e.name){tobepushed.splice(i,1)}}
+            dispatch({ type: 'UPDATE_INPUT', data: tobepushed,});
+            console.log(e.name+"poof");
+        })
+        // setTimeout(() => {
+        //     map.flyTo([10, 100], 6, { duration: 3 })
+        // }, 1000);
+    }, [dispatch]);
     const { BaseLayer, Overlay } = LayersControl;
 
     const [option, setOptions] = useState(
@@ -90,9 +115,6 @@ function MapFun() {
         }
     )
 
-    const [flipflop, setflip] = useState(false);
-    const clicked = () => setflip(!flipflop);
-    var hiRef = useRef();
     function markerOnClick(e) {
         console.log("markerClicked");
         setflip(false)
@@ -123,7 +145,9 @@ function MapFun() {
         //console.log("hi. you clicked the marker");
     }
 
-
+    const [flipflop, setflip] = useState(false);
+    const clicked = () => setflip(!flipflop);
+    var hiRef = useRef();
     return (
         //totally feel like this is all clunky and not organized
         <LeafletMap ref={mapRef}
