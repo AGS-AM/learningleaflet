@@ -186,12 +186,14 @@ function MapFun() {
                                             <div id={item.id + "_test"}>
                                                 <h4>ID: {item.id}</h4>
                                                 {item.name}
-                                                <br></br>
+                                                <br />
                                     Lat : {item.lat}
                                     &nbsp;&nbsp;&nbsp;&nbsp;
                                     Long : {item.lng}
-                                                <br></br>
+                                                <br />
                                     Basin Name : {item.basin}
+                                                <br />
+                                    Type : {item.station_type}
                                             </div>
                                             <Button variant="contained" color={flipflop === false ? "primary" : "secondary"} onClick={clicked}>BOB</Button>
                                         </Popup>

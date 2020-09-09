@@ -100,7 +100,9 @@ function TabsInfo() {
             setpurgeR(tempR)
         }
         waitforFetch()
-    }, [state]);
+        console.log(state.inputArray);
+    }, [state.inputArray.length]);
+    //length fixed it
 //need to create a new effect so this aint pulling every damn time something
     const useStyles = makeStyles({
         table: {
