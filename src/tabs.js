@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import axios from 'axios';
-import { AppBar, Tabs, Tab, Box } from '@material-ui/core'
+import { AppBar, Tabs, Tab, Box, Hidden } from '@material-ui/core'
 // import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination } from '@material-ui/core'
 // import { Paper } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
@@ -92,6 +92,7 @@ function TabsInfo() {
         var tempinfo = [];
         var tempA =[];
         var tempR =[];
+        //move the features to someplace else where the data does not need to be queried with a and r, at least cut that part off 
         async function waitforFetch() {
             tempinfo = await fetchData();
             tempinfo.map((row) => (row.station_type === "A" ? state.inputArray.indexOf(row.basin) !== -1 ? tempA.push(row) :null:null))
@@ -140,6 +141,7 @@ function TabsInfo() {
                                 field: "lng"
                             },
                         ]}
+                        title="Table of Stuff"
                         data={purgeR}
                         //create a func above doing the same thing eg. purgeA = fetchedJson.map ? : null and so on
                         actions={[
@@ -188,6 +190,7 @@ function TabsInfo() {
                                 field: "lng"
                             },
                         ]}
+                        title="Table of Stuff"
                         data={purgeA}
                         //create a func above doing the same thing eg. purgeA = fetchedJson.map ? : null and so on
                         actions={[
