@@ -19,7 +19,7 @@ function MapFun() {
         {
             center: [100, 100],//Start Location
             zoom: 6,
-            maxZoom: 16, 
+            maxZoom: 16,
             attributionControl: true,
             zoomControl: true,
             doubleClickZoom: false,
@@ -53,11 +53,11 @@ function MapFun() {
             tempinfo = await fetchData();
             tempinfo.forEach(element => {
                 temp2.push(element.basin)
-                
+
             });
             //sorts the distinct basins ONCE 
             setRivers(distinct(temp2).sort().reverse());
-            
+
         }
     }, []);
     const mapRef = useRef();
@@ -80,7 +80,7 @@ function MapFun() {
             tobepushed.push(e.name);
             dispatch({ type: 'UPDATE_INPUT', layer: tobepushed, fly: state.inputFly });
             //when a new layer is selected it will be sent to the tabs component
-            
+
         })
         map.on("overlayremove", e => {
             for (var i = 0; i < tobepushed.length; i++) { if (tobepushed[i] === e.name) { tobepushed.splice(i, 1) } }
@@ -88,7 +88,7 @@ function MapFun() {
             //vice versa as a removal would also trigger a change these two parts are the major cause for lag
         })
 
-    },[dispatch]);
+    }, [dispatch]);
 
 
     const [option, setOptions] = useState(
@@ -109,9 +109,7 @@ function MapFun() {
             ]
         }
     )
-
     function markerOnClick(e) {
-
         setflip(false)
         var somuchtemp = e.geocode.split('').map(function (item) {
             return parseInt(item, 10);
@@ -132,20 +130,17 @@ function MapFun() {
                 },
                 {
                     name: "one two three",
-                    data: [0,0.5,1, 1.5, 2, 2.5, 3, 3.5]
+                    data: [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5]
                 }
             ]
         })
-
     }
-
     const [flipflop, setflip] = useState(false);
     //a flipflop state between true and false for a button 
     const clicked = () => setflip(!flipflop);
     var hiRef = useRef();
     //I presume this part is unused but lets keep it here for safe keeps
     return (
-    
         <LeafletMap ref={mapRef}
             center={controlSet.center}
             zoom={controlSet.zoom}
@@ -163,15 +158,16 @@ function MapFun() {
                 <BaseLayer checked name="street">
                     <TileLayer
                         url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+                        attribution= "BOB"
                     />
                 </BaseLayer>
-                <BaseLayer name="nasa">
+                <BaseLayer name="Stadia">
                     <TileLayer
-                        url='https://gibs-{s}.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default//EPSG3857_500m/{z}/{y}/{x}.jpeg'
-                        maxNativeZoom={8}
+                        url='https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png'
+                        maxNativeZoom={20}
+                        attribution= {'&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'}
                     />
                 </BaseLayer>
-
                 {rivers.map(river => {
                     return <Overlay name={river} key={river}>
                         <LayerGroup name={"lgroup" + river}>
@@ -201,12 +197,9 @@ function MapFun() {
                             </MarkerClusterGroup>
                         </LayerGroup>
                     </Overlay>
-
                 })}
-
             </LayersControl>
         </LeafletMap>
     );
-
 }
 export default MapFun
