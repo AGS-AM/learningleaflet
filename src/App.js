@@ -33,7 +33,8 @@ function App() {
     <div className="App">
       <AppContext.Provider value={{ state, dispatch }}>
         <MapFun />
-        <TabsInfo />
+        <div className="temp"><TabsInfo /></div>
+        
       </AppContext.Provider>
     </div>
   );

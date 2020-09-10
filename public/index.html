@@ -16,9 +16,14 @@
     crossorigin=""></script>
   <style>
     .leaflet-container {
-      height: 700px;
-      width: 400px;
+      height: 100%;
+      width: 50%;
+      position: absolute;
     }
+    .temp{
+      position: absolute; left: 50%; width: 50%;
+    }
+    
   </style>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#000000" />
@@ -44,7 +49,7 @@
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div>
-  <div float:left; height: 180px; id="root"></div>
+  <div id="root"></div>
   </div>
   <!--
       This HTML file is a template.

@@ -86,18 +86,24 @@ function TabsInfo() {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+    const [pre, setPre] = useState([]);
+    useEffect(()=>{
+        console.log("once only you shall see");
+        async function wpre(){
+            setPre(await fetchData());
+        }
+        wpre();
+    },[])
     const [purgeA, setpurgeA] = useState([]);
     const [purgeR, setpurgeR] = useState([]);
     useEffect(() => {
-        var tempinfo = [];
         var tempA =[];
         var tempR =[];
         //move the features to someplace else where the data does not need to be queried with a and r, at least cut that part off 
         async function waitforFetch() {
-            tempinfo = await fetchData();
-            tempinfo.map((row) => (row.station_type === "A" ? state.inputArray.indexOf(row.basin) !== -1 ? tempA.push(row) :null:null))
+            pre.map((row) => (row.station_type === "A" ? state.inputArray.indexOf(row.basin) !== -1 ? tempA.push(row) :null:null))
             setpurgeA(tempA)
-            tempinfo.map((row) => (row.station_type === "R" ? state.inputArray.indexOf(row.basin) !== -1 ? tempR.push(row) :null:null))
+            pre.map((row) => (row.station_type === "R" ? state.inputArray.indexOf(row.basin) !== -1 ? tempR.push(row) :null:null))
             setpurgeR(tempR)
         }
         waitforFetch()

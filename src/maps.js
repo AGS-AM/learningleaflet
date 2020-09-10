@@ -54,18 +54,17 @@ function MapFun() {
         var temp2 = [];
         async function waitforFetch() {
             tempinfo = await fetchData();
-
             tempinfo.forEach(element => {
                 temp2.push(element.basin)
             });
+            //Clean these to make em more usable I presume this is eating the resources
             ////console.log(tempinfo);
             //console.log(distinct(temp2));
             setRivers(distinct(temp2));
-            return distinct(temp2);
+            
         }
     }, []);
     const mapRef = useRef();
-    var tobepushed = [];
     useEffect(() => {
         const { current = {} } = mapRef;
         const { leafletElement: map } = current;
@@ -75,6 +74,8 @@ function MapFun() {
         }, 500);
         //console.log("stateChanged");
     }, [state.inputFly]);
+    const { BaseLayer, Overlay } = LayersControl;
+    var tobepushed = [];
     useEffect(() => {
         //console.log("useEffect2");
         const { current = {} } = mapRef;
@@ -82,18 +83,20 @@ function MapFun() {
         map.on("overlayadd", e => {
             tobepushed.push(e.name);
             dispatch({ type: 'UPDATE_INPUT', layer: tobepushed, fly: state.inputFly });
-            //console.log(e.name+"add");
+            console.log(e.name+"add");
+            console.log(tobepushed);
         })
         map.on("overlayremove", e => {
             for (var i = 0; i < tobepushed.length; i++) { if (tobepushed[i] === e.name) { tobepushed.splice(i, 1) } }
             dispatch({ type: 'UPDATE_INPUT', layer: tobepushed, fly: state.inputFly });
-            //console.log(e.name+"poof");
+            console.log(e.name+"poof");
+            console.log(tobepushed);
         })
         // setTimeout(() => {
         //     map.flyTo([10, 100], 6, { duration: 3 })
         // }, 1000);
-    },);
-    const { BaseLayer, Overlay } = LayersControl;
+    },[BaseLayer]);
+
 
     const [option, setOptions] = useState(
         {
