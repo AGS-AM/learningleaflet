@@ -158,7 +158,7 @@ function TabsInfo() {
                         ]}
                         components={{
                             Action: (props) => (
-                                <Button
+                                <Button disabled={props.data.id%2===0?false:true}
                                     onClick={(event) => props.action.onClick(event, props.data)}
                                     color="primary"
                                     variant="contained"
@@ -207,7 +207,7 @@ function TabsInfo() {
                         ]}
                         components={{
                             Action: (props) => (
-                                <Button
+                                <Button disabled={props.data.id%2===0?true:false}
                                     onClick={(event) => props.action.onClick(event, props.data)}
                                     color="primary"
                                     variant="contained"
