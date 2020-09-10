@@ -6,6 +6,7 @@ import { Button } from '@material-ui/core';
 import MaterialTable from 'material-table';
 
 function TabPanel(props) {
+    //draws the data inside the tabs 
     const { children, value, index, ...other } = props;
     return (
         <div {...other}>
@@ -22,15 +23,17 @@ async function fetchData() {
         element.basin = element.basin || "Empty";
     });
     return result.data.locations;
-}
+} //getches the data using axios oh and it changes dem nulls and "" to empty
 function TabsInfo() {
     const { state, dispatch } = useContext(AppContext);
+    //context for communicating with maps
     const [value, setValue] = React.useState(0);
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
     const [pre, setPre] = useState([]);
     useEffect(()=>{
+        //calls the fetched data to be used
         console.log("once only you shall see");
         async function wpre(){
             setPre(await fetchData());
@@ -44,12 +47,14 @@ function TabsInfo() {
         var tempA =[];
         var tempR =[];
         async function waitforFetch() {
+            //purges A and R, there was a plan to make it more stable and optimized but I just threw it out the window. . . .
             pre.map((row) => (row.station_type === "A" ? state.inputArray.indexOf(row.basin) !== -1 ? tempA.push(row) :null:null))
             setpurgeA(tempA)
             pre.map((row) => (row.station_type === "R" ? state.inputArray.indexOf(row.basin) !== -1 ? tempR.push(row) :null:null))
             setpurgeR(tempR)
         }
         waitforFetch()
+        //using length as we only want this to run when either there is a new added overlay or an overlay is unselected
     }, [state.inputArray.length]);
 
     return (

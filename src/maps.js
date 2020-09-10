@@ -14,8 +14,7 @@ import { AppContext } from './App'
 function MapFun() {
 
     const { state, dispatch } = useContext(AppContext);
-    //console.log("Maps");
-    //console.log(state);
+    //context to communicate with other components
     const [controlSet] = useState(
         {
             center: [100, 100],//Start Location
@@ -30,13 +29,10 @@ function MapFun() {
             easeLinearity: 0.35,
         }
     );
+    //init of Map controls 
     const fetchData = async () => {
         const result = await axios(
-            // using axios and not import per future usage
-            // './resource/samplegeo.geojson'
             './resource/station.json',
-            // this is the one that points to TH 
-            // './resource/station_full.json',
         );
         result.data.locations.forEach(element => {
             element.basin = element.basin || "Empty";
@@ -44,8 +40,10 @@ function MapFun() {
         setMarkers(result.data);
         return result.data.locations;
     };
+    //getches the data from a downloaded json
     const [markers, setMarkers] = useState({ locations: [] });
-    const [rivers, setRivers] = useState([])
+    const [rivers, setRivers] = useState([]);
+    //states to be used
     useEffect(() => {
         console.log("Useeffect to distinct happens ONCE");
         waitforFetch();
@@ -57,7 +55,7 @@ function MapFun() {
                 temp2.push(element.basin)
                 
             });
-
+            //sorts the distinct basins ONCE 
             setRivers(distinct(temp2).sort().reverse());
             
         }
@@ -70,7 +68,7 @@ function MapFun() {
         setTimeout(() => {
             map.flyTo([state.inputFly[0], state.inputFly[1]], state.inputFly[2], { duration: 3 })
         }, 500);
-
+        //as stated in log this allows the users to choose how the map flies around
     }, [state.inputFly]);
     const { BaseLayer, Overlay } = LayersControl;
     var tobepushed = [];
@@ -81,13 +79,13 @@ function MapFun() {
         map.on("overlayadd", e => {
             tobepushed.push(e.name);
             dispatch({ type: 'UPDATE_INPUT', layer: tobepushed, fly: state.inputFly });
-
+            //when a new layer is selected it will be sent to the tabs component
             
         })
         map.on("overlayremove", e => {
             for (var i = 0; i < tobepushed.length; i++) { if (tobepushed[i] === e.name) { tobepushed.splice(i, 1) } }
             dispatch({ type: 'UPDATE_INPUT', layer: tobepushed, fly: state.inputFly });
-
+            //vice versa as a removal would also trigger a change these two parts are the major cause for lag
         })
 
     },[dispatch]);
@@ -95,7 +93,7 @@ function MapFun() {
 
     const [option, setOptions] = useState(
         {
-
+            //inital state of the Hichart options 
             chart: {
                 height: 400,
                 width: 260,
@@ -118,7 +116,7 @@ function MapFun() {
         var somuchtemp = e.geocode.split('').map(function (item) {
             return parseInt(item, 10);
         });
-
+        //no good data was provided so the geo code is plotted into the hichart
         setOptions({
             chart: {
                 height: 400,
@@ -142,8 +140,10 @@ function MapFun() {
     }
 
     const [flipflop, setflip] = useState(false);
+    //a flipflop state between true and false for a button 
     const clicked = () => setflip(!flipflop);
     var hiRef = useRef();
+    //I presume this part is unused but lets keep it here for safe keeps
     return (
     
         <LeafletMap ref={mapRef}
