@@ -8,7 +8,6 @@ import MarkerClusterGroup from 'react-leaflet-markercluster';
 import { Button } from '@material-ui/core';
 import { AppContext } from './App'
 
-
 //could potentially create a func to make the graph here based each marker
 //potentially is uncertain LOL
 
@@ -157,13 +156,13 @@ function MapFun() {
         >
             
             <LayersControl>
-                <BaseLayer checked name="street">
+                <BaseLayer checked name="Tile osm">
                     <TileLayer
                         url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
                         attribution="BOB"
                     />
                 </BaseLayer>
-                <BaseLayer name="Stadia">
+                <BaseLayer name="Stadiamaps">
                     <TileLayer
                         url='https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png'
                         maxNativeZoom={20}

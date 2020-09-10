@@ -1,7 +1,6 @@
 import React, { useReducer } from 'react';
 import './App.css';
 import MapFun from './maps';
-// import Charts from './charts';
 import TabsInfo from './tabs';
 import { Paper } from '@material-ui/core';
 
@@ -33,7 +32,7 @@ function App() {
   return (
 
     <div className="App">
-    <div className="title">BOB</div>
+    <div className="title">just a random div </div>
       <Paper>
         <AppContext.Provider value={{ state, dispatch }}>
           <MapFun />

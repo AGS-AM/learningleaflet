@@ -4,14 +4,13 @@ import { AppBar, Tabs, Tab, Box } from '@material-ui/core'
 import { AppContext } from './App'
 import { Button } from '@material-ui/core';
 import MaterialTable from 'material-table';
-import ReactModal from 'react-modal'
 
 function TabPanel(props) {
     //draws the data inside the tabs 
     const { children, value, index, ...other } = props;
     return (
         <div {...other}>
-            {value === index && <Box p={1}>{children}</Box>}
+            {value === index && <Box p={0.5}>{children}</Box>}
         </div>
     );
 }
@@ -100,7 +99,7 @@ function TabsInfo() {
                                 <Button disabled={props.data.id%2===0?false:true}
                                     onClick={(event) => props.action.onClick(event, props.data)}
                                     color="primary"
-                                    variant="contained"
+                                    variant="outlined"
                                     style={{ textTransform: "none" }}
                                     size="small"
                                 >
@@ -148,7 +147,7 @@ function TabsInfo() {
                                 <Button disabled={props.data.id%2===0?true:false}
                                     onClick={(event) => props.action.onClick(event, props.data)}
                                     color="primary"
-                                    variant="contained"
+                                    variant="outlined"
                                     style={{ textTransform: "none" }}
                                     size="small"
                                 >
