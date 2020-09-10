@@ -9,6 +9,7 @@ import { Button } from '@material-ui/core';
 import { AppContext } from './App'
 
 //could potentially create a func to make the graph here based each marker
+//potentially is uncertain LOL
 
 function MapFun() {
 
@@ -17,9 +18,9 @@ function MapFun() {
     //console.log(state);
     const [controlSet] = useState(
         {
-            center: [99, 100],//Start Location
+            center: [100, 100],//Start Location
             zoom: 6,
-            maxZoom: 16, //changed to 8 to be same with nasa
+            maxZoom: 16, 
             attributionControl: true,
             zoomControl: true,
             doubleClickZoom: false,
@@ -38,17 +39,15 @@ function MapFun() {
             // './resource/station_full.json',
         );
         result.data.locations.forEach(element => {
-            //console.log(element.station_type);
             element.basin = element.basin || "Empty";
         });
-        ////console.log(result.data.locations);
         setMarkers(result.data);
         return result.data.locations;
     };
     const [markers, setMarkers] = useState({ locations: [] });
     const [rivers, setRivers] = useState([])
     useEffect(() => {
-        //console.log("useEffect1");
+        console.log("Useeffect to distinct happens ONCE");
         waitforFetch();
         var tempinfo = [];
         var temp2 = [];
@@ -58,50 +57,45 @@ function MapFun() {
                 temp2.push(element.basin)
                 
             });
-            //Clean these to make em more usable I presume this is eating the resources
-            ////console.log(tempinfo);
-            //console.log(distinct(temp2));
+
             setRivers(distinct(temp2).sort().reverse());
             
         }
     }, []);
     const mapRef = useRef();
     useEffect(() => {
+        console.log("useEffect on flying happens ONLY ON FLYTO");
         const { current = {} } = mapRef;
         const { leafletElement: map } = current;
         setTimeout(() => {
             map.flyTo([state.inputFly[0], state.inputFly[1]], state.inputFly[2], { duration: 3 })
         }, 500);
-        //console.log("stateChanged");
+
     }, [state.inputFly]);
     const { BaseLayer, Overlay } = LayersControl;
     var tobepushed = [];
     useEffect(() => {
-        //console.log("useEffect2");
+        console.log("dispatch ONCE");
         const { current = {} } = mapRef;
         const { leafletElement: map } = current;
         map.on("overlayadd", e => {
             tobepushed.push(e.name);
             dispatch({ type: 'UPDATE_INPUT', layer: tobepushed, fly: state.inputFly });
-            // console.log(e.name+"add");
-            // console.log(tobepushed);
+
             
         })
         map.on("overlayremove", e => {
             for (var i = 0; i < tobepushed.length; i++) { if (tobepushed[i] === e.name) { tobepushed.splice(i, 1) } }
             dispatch({ type: 'UPDATE_INPUT', layer: tobepushed, fly: state.inputFly });
-            // console.log(e.name+"poof");
-            // console.log(tobepushed);
+
         })
-        // setTimeout(() => {
-        //     map.flyTo([10, 100], 6, { duration: 3 })
-        // }, 1000);
+
     },[dispatch]);
 
 
     const [option, setOptions] = useState(
         {
-            //change the settings in the useeffect
+
             chart: {
                 height: 400,
                 width: 260,
@@ -119,13 +113,12 @@ function MapFun() {
     )
 
     function markerOnClick(e) {
-        //console.log("markerClicked");
+
         setflip(false)
         var somuchtemp = e.geocode.split('').map(function (item) {
             return parseInt(item, 10);
         });
-        ////console.log(somuchtemp);
-        //dun work properly dough esk de
+
         setOptions({
             chart: {
                 height: 400,
@@ -145,14 +138,14 @@ function MapFun() {
                 }
             ]
         })
-        ////console.log("hi. you clicked the marker");
+
     }
 
     const [flipflop, setflip] = useState(false);
     const clicked = () => setflip(!flipflop);
     var hiRef = useRef();
     return (
-        //totally feel like this is all clunky and not organized
+    
         <LeafletMap ref={mapRef}
             center={controlSet.center}
             zoom={controlSet.zoom}
