@@ -1,7 +1,7 @@
 import React, { useReducer } from 'react';
 import './App.css';
 import MapFun from './maps';
-import Charts from './charts';
+// import Charts from './charts';
 import TabsInfo from './tabs';
 
 export const AppContext = React.createContext();

@@ -83,19 +83,19 @@ function MapFun() {
         map.on("overlayadd", e => {
             tobepushed.push(e.name);
             dispatch({ type: 'UPDATE_INPUT', layer: tobepushed, fly: state.inputFly });
-            console.log(e.name+"add");
-            console.log(tobepushed);
+            // console.log(e.name+"add");
+            // console.log(tobepushed);
         })
         map.on("overlayremove", e => {
             for (var i = 0; i < tobepushed.length; i++) { if (tobepushed[i] === e.name) { tobepushed.splice(i, 1) } }
             dispatch({ type: 'UPDATE_INPUT', layer: tobepushed, fly: state.inputFly });
-            console.log(e.name+"poof");
-            console.log(tobepushed);
+            // console.log(e.name+"poof");
+            // console.log(tobepushed);
         })
         // setTimeout(() => {
         //     map.flyTo([10, 100], 6, { duration: 3 })
         // }, 1000);
-    },[BaseLayer]);
+    },[dispatch]);
 
 
     const [option, setOptions] = useState(
@@ -128,7 +128,7 @@ function MapFun() {
         setOptions({
             chart: {
                 height: 400,
-                width: 260,
+                width: 250,
             },
             title: {
                 text: e.name

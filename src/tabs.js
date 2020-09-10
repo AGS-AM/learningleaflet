@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react'
 import axios from 'axios';
-import { AppBar, Tabs, Tab, Box, Hidden } from '@material-ui/core'
+import { AppBar, Tabs, Tab, Box } from '@material-ui/core'
 // import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination } from '@material-ui/core'
 // import { Paper } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles';
+// import { makeStyles } from '@material-ui/core/styles';
 import { AppContext } from './App'
 import { Button } from '@material-ui/core';
 // import { Icon } from '@material-ui/core';
@@ -88,7 +88,7 @@ function TabsInfo() {
     };
     const [pre, setPre] = useState([]);
     useEffect(()=>{
-        console.log("once only you shall see");
+        // console.log("once only you shall see");
         async function wpre(){
             setPre(await fetchData());
         }
@@ -111,12 +111,6 @@ function TabsInfo() {
     }, [state.inputArray.length]);
     //length fixed it
 //need to create a new effect so this aint pulling every damn time something
-    const useStyles = makeStyles({
-        table: {
-            minWidth: 650,
-        },
-    });
-    const classes = useStyles;
 
     return (
         <>
