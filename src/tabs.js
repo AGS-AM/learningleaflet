@@ -48,10 +48,10 @@ function TabsInfo() {
         var tempR =[];
         async function waitforFetch() {
             //purges A and R, there was a plan to make it more stable and optimized but I just threw it out the window. . . .
-            pre.map((row) => (row.station_type === "A" ? state.inputArray.indexOf(row.basin) !== -1 ? tempA.push(row) :null:null))
-            setpurgeA(tempA)
-            pre.map((row) => (row.station_type === "R" ? state.inputArray.indexOf(row.basin) !== -1 ? tempR.push(row) :null:null))
-            setpurgeR(tempR)
+            pre.map((row) => (row.station_type === "A" ? state.inputArray.indexOf(row.basin) !== -1 ? tempA.push(row) :null:null));
+            setpurgeA(tempA);
+            pre.map((row) => (row.station_type === "R" ? state.inputArray.indexOf(row.basin) !== -1 ? tempR.push(row) :null:null));
+            setpurgeR(tempR);
         }
         waitforFetch()
         //using length as we only want this to run when either there is a new added overlay or an overlay is unselected
@@ -71,19 +71,23 @@ function TabsInfo() {
                         columns={[
                             {
                                 title: "ID",
-                                field: "id"
+                                field: "id",
+                                align: "left"
                             },
                             {
                                 title: "Name",
-                                field: "name"
+                                field: "name",
+                                align: "left"
                             },
                             {
                                 title: "Lat",
-                                field: "lat"
+                                field: "lat",
+                                align: "left"
                             },
                             {
                                 title: "Long",
-                                field: "lng"
+                                field: "lng",
+                                align: "left"
                             },
                         ]}
                         title="Table of Stuff"
@@ -102,6 +106,7 @@ function TabsInfo() {
                                     variant="outlined"
                                     style={{ textTransform: "none" }}
                                     size="small"
+                                    align="left"
                                 >
                                     Fly To
                                 </Button>

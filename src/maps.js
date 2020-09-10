@@ -65,9 +65,7 @@ function MapFun() {
         console.log("useEffect on flying happens ONLY ON FLYTO");
         const { current = {} } = mapRef;
         const { leafletElement: map } = current;
-        setTimeout(() => {
-            map.flyTo([state.inputFly[0], state.inputFly[1]], state.inputFly[2], { duration: 3 })
-        }, 500);
+        map.flyTo([state.inputFly[0], state.inputFly[1]], state.inputFly[2], { duration: 1 })
         //as stated in log this allows the users to choose how the map flies around
     }, [state.inputFly]);
     const { BaseLayer, Overlay } = LayersControl;
@@ -110,7 +108,7 @@ function MapFun() {
         }
     )
     function markerOnClick(e) {
-        setflip(false)
+        //setflip(false)
         var somuchtemp = e.geocode.split('').map(function (item) {
             return parseInt(item, 10);
         });
@@ -130,7 +128,7 @@ function MapFun() {
                 },
                 {
                     name: "one two three",
-                    data: [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5]
+                    data: [0, 1, 2, 3, 4, 5]
                 }
             ]
         })
@@ -152,9 +150,10 @@ function MapFun() {
             dragging={controlSet.dragging}
             animate={controlSet.animate}
             easeLinearity={controlSet.easeLinearity}
+            closePopupOnClick={false}
             worldCopyJump={true}
         >
-            
+            <Button  className="refreshButton" variant="contained" color={flipflop === false ? "primary" : "secondary"} onClick={clicked}>BOB</Button>
             <LayersControl>
                 <BaseLayer checked name="Tile osm">
                     <TileLayer
@@ -190,7 +189,7 @@ function MapFun() {
                                                 <br />
                                     Type : {item.station_type}
                                             </div>
-                                            <Button variant="contained" color={flipflop === false ? "primary" : "secondary"} onClick={clicked}>BOB</Button>
+                                            {/* <Button variant="contained" color={flipflop === false ? "primary" : "secondary"} onClick={clicked}>BOB</Button> */}
                                         </Popup>
                                     </Marker> : null
                                 }
