@@ -7,6 +7,7 @@ import distinct from 'distinct';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import { Button } from '@material-ui/core';
 import { AppContext } from './App'
+import Chip from '@material-ui/core/Chip';
 
 //could potentially create a func to make the graph here based each marker
 //potentially is uncertain LOL
@@ -75,12 +76,14 @@ function MapFun() {
         const { current = {} } = mapRef;
         const { leafletElement: map } = current;
         map.on("overlayadd", e => {
+            setflip(false)
             tobepushed.push(e.name);
             dispatch({ type: 'UPDATE_INPUT', layer: tobepushed, fly: state.inputFly });
             //when a new layer is selected it will be sent to the tabs component
 
         })
         map.on("overlayremove", e => {
+            setflip(false)
             for (var i = 0; i < tobepushed.length; i++) { if (tobepushed[i] === e.name) { tobepushed.splice(i, 1) } }
             dispatch({ type: 'UPDATE_INPUT', layer: tobepushed, fly: state.inputFly });
             //vice versa as a removal would also trigger a change these two parts are the major cause for lag
@@ -108,7 +111,7 @@ function MapFun() {
         }
     )
     function markerOnClick(e) {
-        //setflip(false)
+        // setflip(false)
         var somuchtemp = e.geocode.split('').map(function (item) {
             return parseInt(item, 10);
         });
@@ -150,10 +153,14 @@ function MapFun() {
             dragging={controlSet.dragging}
             animate={controlSet.animate}
             easeLinearity={controlSet.easeLinearity}
-            closePopupOnClick={false}
+            closePopupOnClick={true} //changable
             worldCopyJump={true}
         >
-            <Button  className="refreshButton" variant="contained" color={flipflop === false ? "primary" : "secondary"} onClick={clicked}>BOB</Button>
+            <Chip
+                className="refreshButton"
+                label={flipflop === false ? "Show Chart Off" : "Show Chart On"}
+                color={flipflop === false ? "" : "primary"}
+            />
             <LayersControl>
                 <BaseLayer checked name="Tile osm">
                     <TileLayer
@@ -174,7 +181,7 @@ function MapFun() {
                             <MarkerClusterGroup>
                                 {markers.locations.map(item => {
                                     return item.basin === river ? <Marker position={[item.lat, item.lng]} key={item.id} onclick={e => markerOnClick(item)} >
-                                        <Popup>
+                                        <Popup >
 
                                             {flipflop === true ? <HighchartsReact highcharts={Highcharts} options={option} ref={hiRef} /> : null}
                                             <div id={item.id + "_test"}>
@@ -189,7 +196,7 @@ function MapFun() {
                                                 <br />
                                     Type : {item.station_type}
                                             </div>
-                                            {/* <Button variant="contained" color={flipflop === false ? "primary" : "secondary"} onClick={clicked}>BOB</Button> */}
+                                            <Button variant="contained" color={flipflop === false ? "" : "primary"} onClick={clicked}>BOB</Button>
                                         </Popup>
                                     </Marker> : null
                                 }
