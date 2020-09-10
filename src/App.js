@@ -33,7 +33,7 @@ function App() {
   return (
 
     <div className="App">
-    <div className="title">I do wonder how ppl make websites look cool</div>
+    <div className="title">BOB</div>
       <Paper>
         <AppContext.Provider value={{ state, dispatch }}>
           <MapFun />
