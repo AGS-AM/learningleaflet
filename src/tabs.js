@@ -4,6 +4,7 @@ import { AppBar, Tabs, Tab, Box } from '@material-ui/core'
 import { AppContext } from './App'
 import { Button } from '@material-ui/core';
 import MaterialTable from 'material-table';
+import ReactModal from 'react-modal'
 
 function TabPanel(props) {
     //draws the data inside the tabs 

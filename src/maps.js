@@ -8,6 +8,7 @@ import MarkerClusterGroup from 'react-leaflet-markercluster';
 import { Button } from '@material-ui/core';
 import { AppContext } from './App'
 
+
 //could potentially create a func to make the graph here based each marker
 //potentially is uncertain LOL
 
@@ -154,18 +155,19 @@ function MapFun() {
             easeLinearity={controlSet.easeLinearity}
             worldCopyJump={true}
         >
+            
             <LayersControl>
                 <BaseLayer checked name="street">
                     <TileLayer
                         url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
-                        attribution= "BOB"
+                        attribution="BOB"
                     />
                 </BaseLayer>
                 <BaseLayer name="Stadia">
                     <TileLayer
                         url='https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png'
                         maxNativeZoom={20}
-                        attribution= {'&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'}
+                        attribution={'&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'}
                     />
                 </BaseLayer>
                 {rivers.map(river => {
@@ -175,6 +177,7 @@ function MapFun() {
                                 {markers.locations.map(item => {
                                     return item.basin === river ? <Marker position={[item.lat, item.lng]} key={item.id} onclick={e => markerOnClick(item)} >
                                         <Popup>
+
                                             {flipflop === true ? <HighchartsReact highcharts={Highcharts} options={option} ref={hiRef} /> : null}
                                             <div id={item.id + "_test"}>
                                                 <h4>ID: {item.id}</h4>
