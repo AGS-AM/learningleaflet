@@ -56,11 +56,12 @@ function MapFun() {
             tempinfo = await fetchData();
             tempinfo.forEach(element => {
                 temp2.push(element.basin)
+                
             });
             //Clean these to make em more usable I presume this is eating the resources
             ////console.log(tempinfo);
             //console.log(distinct(temp2));
-            setRivers(distinct(temp2));
+            setRivers(distinct(temp2).sort().reverse());
             
         }
     }, []);
@@ -68,7 +69,6 @@ function MapFun() {
     useEffect(() => {
         const { current = {} } = mapRef;
         const { leafletElement: map } = current;
-
         setTimeout(() => {
             map.flyTo([state.inputFly[0], state.inputFly[1]], state.inputFly[2], { duration: 3 })
         }, 500);
@@ -85,6 +85,7 @@ function MapFun() {
             dispatch({ type: 'UPDATE_INPUT', layer: tobepushed, fly: state.inputFly });
             // console.log(e.name+"add");
             // console.log(tobepushed);
+            
         })
         map.on("overlayremove", e => {
             for (var i = 0; i < tobepushed.length; i++) { if (tobepushed[i] === e.name) { tobepushed.splice(i, 1) } }
@@ -140,7 +141,7 @@ function MapFun() {
                 },
                 {
                     name: "one two three",
-                    data: [1, 2, 3, 3, 2, 1]
+                    data: [0,0.5,1, 1.5, 2, 2.5, 3, 3.5]
                 }
             ]
         })

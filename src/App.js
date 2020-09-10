@@ -3,6 +3,7 @@ import './App.css';
 import MapFun from './maps';
 // import Charts from './charts';
 import TabsInfo from './tabs';
+import { Paper } from '@material-ui/core';
 
 export const AppContext = React.createContext();
 
@@ -30,13 +31,19 @@ function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
+
     <div className="App">
-      <AppContext.Provider value={{ state, dispatch }}>
-        <MapFun />
-        <div className="temp"><TabsInfo /></div>
-        
-      </AppContext.Provider>
+    <div className="title">I do wonder how ppl make website look cool</div>
+      <Paper>
+        <AppContext.Provider value={{ state, dispatch }}>
+          <MapFun />
+          <div className="temp"><TabsInfo /></div>
+
+        </AppContext.Provider>
+
+      </Paper>
     </div>
+
   );
 }
 
