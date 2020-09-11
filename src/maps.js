@@ -180,7 +180,8 @@ function MapFun() {
                 {rivers.map(river => {
                     return <Overlay name={river} key={river}>
                         <LayerGroup name={"lgroup" + river}>
-                            <MarkerClusterGroup>
+                            <MarkerClusterGroup showCoverageOnHover={false} zoomToBoundsOnClick={false}>
+                            {/* this has been set to false, now we just create a polygon on each province and zoom on that insteado f this */}
                                 {markers.locations.map(item => {
                                     return item.basin === river ? <Marker position={[item.lat, item.lng]} key={item.id} onclick={e => markerOnClick(item)} >
                                         <Popup >
