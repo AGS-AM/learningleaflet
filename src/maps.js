@@ -185,7 +185,6 @@ function MapFun() {
                                 {markers.locations.map(item => {
                                     return item.basin === river ? <Marker position={[item.lat, item.lng]} key={item.id} onclick={e => markerOnClick(item)} >
                                         <Popup >
-
                                             {flipflop === true ? <HighchartsReact highcharts={Highcharts} options={option} ref={hiRef} /> : null}
                                             <div id={item.id + "_test"}>
                                                 <h4>ID: {item.id}</h4>
