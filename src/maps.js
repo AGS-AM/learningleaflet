@@ -9,6 +9,7 @@ import { Button } from '@material-ui/core';
 import { AppContext } from './App'
 import Chip from '@material-ui/core/Chip';
 
+
 //could potentially create a func to make the graph here based each marker
 //potentially is uncertain LOL
 
@@ -89,14 +90,14 @@ function MapFun() {
             //vice versa as a removal would also trigger a change these two parts are the major cause for lag
         })
 
-    }, [dispatch]);
+    }, []);
 
 
     const [option, setOptions] = useState(
         {
             //inital state of the Hichart options 
             chart: {
-                height: 400,
+                height: 300,
                 width: 260,
                 type: 'pie'
             },
@@ -118,7 +119,7 @@ function MapFun() {
         //no good data was provided so the geo code is plotted into the hichart
         setOptions({
             chart: {
-                height: 400,
+                height: 300,
                 width: 250,
             },
             title: {
@@ -156,10 +157,11 @@ function MapFun() {
             closePopupOnClick={true} //changable
             worldCopyJump={true}
         >
+        
             <Chip
-                className="refreshButton"
-                label={flipflop === false ? "Show Chart Off" : "Show Chart On"}
-                color={flipflop === false ? "" : "primary"}
+                className="chip"
+                label={flipflop === false ? "Show Chart: Off" : "Show Chart: On"}
+                color={flipflop === false ? "default" : "primary"}
             />
             <LayersControl>
                 <BaseLayer checked name="Tile osm">

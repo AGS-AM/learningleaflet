@@ -3,7 +3,6 @@ import './App.css';
 import MapFun from './maps';
 import TabsInfo from './tabs';
 import { Paper } from '@material-ui/core';
-
 export const AppContext = React.createContext();
 
 const initialState = {
@@ -32,7 +31,8 @@ function App() {
   return (
 
     <div className="App">
-    <div className="title">just a random div </div>
+    
+    <div className="title">just a random div for the title</div>
       <Paper>
         <AppContext.Provider value={{ state, dispatch }}>
           <MapFun />

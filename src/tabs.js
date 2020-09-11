@@ -4,6 +4,8 @@ import { AppBar, Tabs, Tab, Box } from '@material-ui/core'
 import { AppContext } from './App'
 import { Button } from '@material-ui/core';
 import MaterialTable from 'material-table';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
 
 function TabPanel(props) {
     //draws the data inside the tabs 
@@ -32,25 +34,25 @@ function TabsInfo() {
         setValue(newValue);
     };
     const [pre, setPre] = useState([]);
-    useEffect(()=>{
+    useEffect(() => {
         //calls the fetched data to be used
         console.log("once only you shall see");
-        async function wpre(){
+        async function wpre() {
             setPre(await fetchData());
         }
         wpre();
-    },[])
+    }, [])
     const [purgeA, setpurgeA] = useState([]);
     const [purgeR, setpurgeR] = useState([]);
     useEffect(() => {
         console.log("Only seen when a change happens in the overlay");
-        var tempA =[];
-        var tempR =[];
+        var tempA = [];
+        var tempR = [];
         async function waitforFetch() {
             //purges A and R, there was a plan to make it more stable and optimized but I just threw it out the window. . . .
-            pre.map((row) => (row.station_type === "A" ? state.inputArray.indexOf(row.basin) !== -1 ? tempA.push(row) :null:null));
+            pre.map((row) => (row.station_type === "A" ? state.inputArray.indexOf(row.basin) !== -1 ? tempA.push(row) : null : null));
             setpurgeA(tempA);
-            pre.map((row) => (row.station_type === "R" ? state.inputArray.indexOf(row.basin) !== -1 ? tempR.push(row) :null:null));
+            pre.map((row) => (row.station_type === "R" ? state.inputArray.indexOf(row.basin) !== -1 ? tempR.push(row) : null : null));
             setpurgeR(tempR);
         }
         waitforFetch()
@@ -82,12 +84,14 @@ function TabsInfo() {
                             {
                                 title: "Lat",
                                 field: "lat",
-                                align: "left"
+                                align: "left",
+                                searchable: false
                             },
                             {
                                 title: "Long",
                                 field: "lng",
-                                align: "left"
+                                align: "left",
+                                searchable: false
                             },
                         ]}
                         title="Table of Stuff"
@@ -98,9 +102,38 @@ function TabsInfo() {
                                 onClick: (event, rowData) => dispatch({ type: 'UPDATE_INPUT', layer: state.inputArray, fly: [rowData.lat, rowData.lng, 15] })
                             }
                         ]}
+                        detailPanel={rowData => {
+                            return (
+                                <div>
+                                    <HighchartsReact highcharts={Highcharts} options={({
+                                        chart: {
+                                            height: 300,
+                                            width: 500,
+                                            
+                                        },
+                                        title: {
+                                            text: rowData.name
+                                        },
+                                        series: [
+                                            {
+                                                name: "random stuff",
+                                                data: rowData.geocode.split('').map(function (item) {
+                                                    return parseInt(item, 10);
+                                                })
+                                            },
+                                            {
+                                                name: "one two three",
+                                                data: [0, 1, 2, 3, 4, 5]
+                                            }
+                                        ]
+                                    })} />
+                                </div>
+                            )
+                        }}
                         components={{
                             Action: (props) => (
-                                <Button disabled={props.data.id%2===0?false:true}
+                                <Button
+                                    disabled={props.data.id % 2 === 0 ? false : true}
                                     onClick={(event) => props.action.onClick(event, props.data)}
                                     color="primary"
                                     variant="outlined"
@@ -113,7 +146,9 @@ function TabsInfo() {
                             )
                         }}
                         options={{
-                            actionsColumnIndex: -1
+                            actionsColumnIndex: -1,
+                            pageSize: 5,
+                            pageSizeOptions: []
                         }}
                     />
                 }
@@ -132,11 +167,13 @@ function TabsInfo() {
                             },
                             {
                                 title: "Lat",
-                                field: "lat"
+                                field: "lat",
+                                searchable: false
                             },
                             {
                                 title: "Long",
-                                field: "lng"
+                                field: "lng",
+                                searchable: false
                             },
                         ]}
                         title="Table of Stuff"
@@ -147,21 +184,52 @@ function TabsInfo() {
                                 onClick: (event, rowData) => dispatch({ type: 'UPDATE_INPUT', layer: state.inputArray, fly: [rowData.lat, rowData.lng, 15] })
                             }
                         ]}
+                        detailPanel={rowData => {
+                            return (
+                                <div>
+                                    <HighchartsReact highcharts={Highcharts} options={({
+                                        chart: {
+                                            height: 300,
+                                            width: 500,
+                                        },
+                                        title: {
+                                            text: rowData.name
+                                        },
+                                        series: [
+                                            {
+                                                name: "random stuff",
+                                                data: rowData.geocode.split('').map(function (item) {
+                                                    return parseInt(item, 10);
+                                                })
+                                            },
+                                            {
+                                                name: "one two three",
+                                                data: [0, 1, 2, 3, 4, 5]
+                                            }
+                                        ]
+                                    })} />
+                                </div>
+                            )
+                        }}
                         components={{
                             Action: (props) => (
-                                <Button disabled={props.data.id%2===0?true:false}
+                                <Button
+                                    disabled={props.data.id % 2 === 0 ? false : true}
                                     onClick={(event) => props.action.onClick(event, props.data)}
                                     color="primary"
                                     variant="outlined"
                                     style={{ textTransform: "none" }}
                                     size="small"
+                                    align="left"
                                 >
                                     Fly To
                                 </Button>
                             )
                         }}
                         options={{
-                            actionsColumnIndex: -1
+                            actionsColumnIndex: -1,
+                            pageSize: 5,
+                            pageSizeOptions: []
                         }}
                     />
                 }
