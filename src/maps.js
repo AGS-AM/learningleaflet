@@ -47,7 +47,7 @@ async function thPoly() {
     tempret.forEach(element => {
         //some have unstable lengths, so just go if length == 1 then start mapping 
         //else if its more than that do a foreach then map'em
-        console.log(element);
+        // console.log(element);
     });
     return tempret
 }
@@ -240,7 +240,7 @@ function MapFun() {
                             <MarkerClusterGroup showCoverageOnHover={false} zoomToBoundsOnClick={false} maxClusterRadius={30}>
                                 {/* this has been set to false, now we just create a polygon on each province and zoom on that insteado f this */}
                                 {markers.locations.map(item => {
-                                    return item.basin === river ? <Marker position={[item.lat, item.lng]} key={item.id} onclick={e => {markerOnClick(item);}} >
+                                    return item.basin === river ? <Marker position={[item.lat, item.lng]} key={item.id} onclick={e => markerOnClick(item)} >
                                         <Popup >
                                             {flipflop === true ? <HighchartsReact highcharts={Highcharts} options={option} ref={hiRef} /> : null}
                                             <div id={item.id + "_test"}>
