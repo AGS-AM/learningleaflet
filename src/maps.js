@@ -33,6 +33,13 @@ async function thPoly() {
     });
     return tempret
 }
+function supercoolcolors(c)
+{
+    return c >64 ? '#a83830' :
+        c >48 ? '#c85848' :
+        c >32 ? '#f87030' :
+        c >16 ? '#f89038' : '#f0a860'
+}
 function MapFun() {
     
     const { state, dispatch } = useContext(AppContext);
@@ -136,7 +143,7 @@ function MapFun() {
             ]
         }
     )
-    function markerOnClick(e) {
+    const markerOnClick =(e)=>{
         // setflip(false)
         var somuchtemp = e.geocode.split('').map(function (item) {
             return parseInt(item, 10);
@@ -205,8 +212,8 @@ function MapFun() {
 
                 {/* testing polygon with maps */}
                 {thpolygons.map(thpol => {
-                    return <Polygon name={thpol.properties.ID_1} key={thpol.properties.ID_1} onmouseout={e=> e.target.setStyle({stroke: false})} onmouseover={e=> e.target.setStyle({stroke: true})} stroke={false} fillOpacity="0%" positions={thpol.geometry.coordinates} >
-                    <Tooltip>{thpol.properties.NL_NAME_1}</Tooltip>
+                    return <Polygon name={thpol.properties.ID_1} key={thpol.properties.ID_1} onmouseout={e=> e.target.setStyle({stroke: false, color:supercoolcolors(thpol.properties.ID_1), fillOpacity:"20%"})} onmouseover={e=> e.target.setStyle({stroke: true,color:supercoolcolors(thpol.properties.ID_1), fillOpacity:"50%"})} stroke={false} fillColor={supercoolcolors(thpol.properties.ID_1)} fillOpacity="20%" positions={thpol.geometry.coordinates} >
+                    <Tooltip>{thpol.properties.NL_NAME_1} {thpol.properties.ID_1} </Tooltip>
                     </Polygon>
                 })}
                 
