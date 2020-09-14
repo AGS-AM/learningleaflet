@@ -12,19 +12,37 @@ import Chip from '@material-ui/core/Chip';
 
 //could potentially create a func to make the graph here based each marker
 //potentially is uncertain LOL
+//find a way to make this work with react since marker and poly is at both diff placs 
+function isMarkerInsidePolygon(marker, poly) {
+    var inside = false;
+    var x = marker.getLatLng().lat, y = marker.getLatLng().lng;
+    for (var ii=0;ii<poly.getLatLngs().length;ii++){
+        var polyPoints = poly.getLatLngs()[ii];
+        for (var i = 0, j = polyPoints.length - 1; i < polyPoints.length; j = i++) {
+            var xi = polyPoints[i].lat, yi = polyPoints[i].lng;
+            var xj = polyPoints[j].lat, yj = polyPoints[j].lng;
+
+            var intersect = ((yi > y) !== (yj > y))
+                && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+            if (intersect) inside = !inside;
+        }
+    }
+
+    return inside;
+};
 async function thPoly() {
     var temp = []
-    var tempret= []
+    var tempret = []
     const fetchData = async () => {
         const result = await axios(
             './resource/thnew.json',
         );
         temp = result.data.features
 
-    
+
         return temp;
     };
-    
+
     tempret = await fetchData()
     tempret.forEach(element => {
         //some have unstable lengths, so just go if length == 1 then start mapping 
@@ -33,15 +51,14 @@ async function thPoly() {
     });
     return tempret
 }
-function supercoolcolors(c)
-{
-    return c >64 ? '#a83830' :
-        c >48 ? '#c85848' :
-        c >32 ? '#f87030' :
-        c >16 ? '#f89038' : '#f0a860'
+function supercoolcolors(c) {
+    return c > 64 ? '#a83830' :
+        c > 48 ? '#c85848' :
+            c > 32 ? '#f87030' :
+                c > 16 ? '#f89038' : '#f0a860'
 }
 function MapFun() {
-    
+
     const { state, dispatch } = useContext(AppContext);
     //context to communicate with other components
     const [controlSet] = useState(
@@ -143,7 +160,7 @@ function MapFun() {
             ]
         }
     )
-    const markerOnClick =(e)=>{
+    const markerOnClick = (e) => {
         // setflip(false)
         var somuchtemp = e.geocode.split('').map(function (item) {
             return parseInt(item, 10);
@@ -189,7 +206,7 @@ function MapFun() {
             closePopupOnClick={true} //changable
             worldCopyJump={true}
         >
-            
+
             <Chip
                 className="chip"
                 label={flipflop === false ? "Show Chart: Off" : "Show Chart: On"}
@@ -212,18 +229,18 @@ function MapFun() {
 
                 {/* testing polygon with maps */}
                 {thpolygons.map(thpol => {
-                    return <Polygon name={thpol.properties.ID_1} key={thpol.properties.ID_1} onmouseout={e=> e.target.setStyle({stroke: false, color:supercoolcolors(thpol.properties.ID_1), fillOpacity:"20%"})} onmouseover={e=> e.target.setStyle({stroke: true,color:supercoolcolors(thpol.properties.ID_1), fillOpacity:"50%"})} stroke={false} fillColor={supercoolcolors(thpol.properties.ID_1)} fillOpacity="20%" positions={thpol.geometry.coordinates} >
-                    <Tooltip>{thpol.properties.NL_NAME_1} {thpol.properties.ID_1} </Tooltip>
+                    return <Polygon name={thpol.properties.ID_1} key={thpol.properties.ID_1} onmouseout={e => e.target.setStyle({ stroke: false, color: supercoolcolors(thpol.properties.ID_1), fillOpacity: "20%" })} onmouseover={e => e.target.setStyle({ stroke: true, color: supercoolcolors(thpol.properties.ID_1), fillOpacity: "50%" })} stroke={false} fillColor={supercoolcolors(thpol.properties.ID_1)} fillOpacity="20%" positions={thpol.geometry.coordinates} >
+                        <Tooltip>{thpol.properties.NL_NAME_1} {thpol.properties.ID_1} </Tooltip>
                     </Polygon>
                 })}
-                
+
                 {rivers.map(river => {
                     return <Overlay name={river} key={river}>
                         <LayerGroup name={"lgroup" + river}>
                             <MarkerClusterGroup showCoverageOnHover={false} zoomToBoundsOnClick={false} maxClusterRadius={30}>
                                 {/* this has been set to false, now we just create a polygon on each province and zoom on that insteado f this */}
                                 {markers.locations.map(item => {
-                                    return item.basin === river ? <Marker position={[item.lat, item.lng]} key={item.id} onclick={e => markerOnClick(item)} >
+                                    return item.basin === river ? <Marker position={[item.lat, item.lng]} key={item.id} onclick={e => {markerOnClick(item);}} >
                                         <Popup >
                                             {flipflop === true ? <HighchartsReact highcharts={Highcharts} options={option} ref={hiRef} /> : null}
                                             <div id={item.id + "_test"}>
