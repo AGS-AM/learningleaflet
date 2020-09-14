@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from 'react'
-import { Map as LeafletMap, TileLayer, Marker, Popup, LayersControl, LayerGroup, Polygon } from 'react-leaflet';
+import { Map as LeafletMap, TileLayer, Marker, Popup, LayersControl, LayerGroup, Polygon, Tooltip } from 'react-leaflet';
 import axios from 'axios';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -24,7 +24,13 @@ async function thPoly() {
     
         return temp;
     };
+    
     tempret = await fetchData()
+    tempret.forEach(element => {
+        //some have unstable lengths, so just go if length == 1 then start mapping 
+        //else if its more than that do a foreach then map'em
+        console.log(element);
+    });
     return tempret
 }
 function MapFun() {
@@ -56,11 +62,13 @@ function MapFun() {
         setMarkers(result.data);
         //Thaimapped polygons here
         var tester = await thPoly();
-        console.log(tester);
+        setthpolygons(tester);
+        // console.log(tester);
         return result.data.locations;
     };
     //getches the data from a downloaded json
     const [markers, setMarkers] = useState({ locations: [] });
+    const [thpolygons, setthpolygons] = useState([]);
     const [rivers, setRivers] = useState([]);
     //states to be used
     useEffect(() => {
@@ -194,12 +202,18 @@ function MapFun() {
                         attribution={'&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'}
                     />
                 </BaseLayer>
+
                 {/* testing polygon with maps */}
-                {<Polygon positions={[[[100.4697875976563, 14.71473026275629], [100.4965286254884, 14.6971693038941], [100.510971069336, 14.672991752624625], [100.4935913085938, 14.61084270477295], [100.49265289306663, 14.547979354858398], [100.50138854980469, 14.501179695129508], [100.49282836914068, 14.45790100097662], [100.46128082275408, 14.437748908996582], [100.41893005371088, 14.44324016571045], [100.414115905762, 14.504490852355957], [100.31771850585943, 14.488221168518123], [100.28720092773443, 14.496430397033748], [100.25382995605474, 14.481008529663029], [100.2326431274414, 14.48876094818121], [100.20761108398455, 14.52184009552002], [100.19719696044945, 14.555229187011832], [100.21118164062528, 14.577770233154354], [100.19599151611345, 14.607510566711426], [100.2316284179687, 14.650389671325797], [100.21610260009771, 14.690299987792912], [100.20681762695324, 14.740090370178166], [100.21141815185564, 14.776480674743596], [100.22853851318388, 14.789620399475154], [100.24691009521501, 14.796950340270996], [100.29199981689476, 14.78390026092535], [100.33238983154297, 14.799441337585563], [100.34213256835943, 14.77313137054449], [100.3701782226563, 14.763200759887638], [100.38214111328142, 14.74120044708252], [100.40812683105474, 14.754261970520133], [100.41617584228521, 14.726392745971737], [100.4697875976563, 14.71473026275629]]]}></Polygon>}
+                {thpolygons.map(thpol => {
+                    return <Polygon name={thpol.properties.ID_1} key={thpol.properties.ID_1} onmouseout={e=> e.target.setStyle({stroke: false})} onmouseover={e=> e.target.setStyle({stroke: true})} stroke={false} fillOpacity="0%" positions={thpol.geometry.coordinates} >
+                    <Tooltip>{thpol.properties.NL_NAME_1}</Tooltip>
+                    </Polygon>
+                })}
+                
                 {rivers.map(river => {
                     return <Overlay name={river} key={river}>
                         <LayerGroup name={"lgroup" + river}>
-                            <MarkerClusterGroup showCoverageOnHover={false} zoomToBoundsOnClick={false}>
+                            <MarkerClusterGroup showCoverageOnHover={false} zoomToBoundsOnClick={false} maxClusterRadius={30}>
                                 {/* this has been set to false, now we just create a polygon on each province and zoom on that insteado f this */}
                                 {markers.locations.map(item => {
                                     return item.basin === river ? <Marker position={[item.lat, item.lng]} key={item.id} onclick={e => markerOnClick(item)} >
@@ -217,7 +231,7 @@ function MapFun() {
                                                 <br />
                                     Type : {item.station_type}
                                             </div>
-                                            <Button variant="contained" color={flipflop === false ? "" : "primary"} onClick={clicked}>BOB</Button>
+                                            <Button variant="contained" color={flipflop === false ? "default" : "primary"} onClick={clicked}>BOB</Button>
                                         </Popup>
                                     </Marker> : null
                                 }
