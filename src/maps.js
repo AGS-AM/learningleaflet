@@ -229,7 +229,7 @@ function MapFun() {
 
                 {/* testing polygon with maps */}
                 {thpolygons.map(thpol => {
-                    return <Polygon name={thpol.properties.ID_1} key={thpol.properties.ID_1} onmouseout={e => e.target.setStyle({ stroke: false, color: supercoolcolors(thpol.properties.ID_1), fillOpacity: "20%" })} onmouseover={e => e.target.setStyle({ stroke: true, color: supercoolcolors(thpol.properties.ID_1), fillOpacity: "50%" })} stroke={false} fillColor={supercoolcolors(thpol.properties.ID_1)} fillOpacity="20%" positions={thpol.geometry.coordinates} >
+                    return <Polygon name={thpol.properties.ID_1} key={thpol.properties.ID_1} onmouseout={a => a.target.setStyle({ stroke: false, color: supercoolcolors(thpol.properties.ID_1), fillOpacity: "20%" })} onmouseover={a => a.target.setStyle({ stroke: true, color: supercoolcolors(thpol.properties.ID_1), fillOpacity: "50%" })} stroke={false} fillColor={supercoolcolors(thpol.properties.ID_1)} fillOpacity="20%" positions={thpol.geometry.coordinates} >
                         <Tooltip>{thpol.properties.NL_NAME_1} {thpol.properties.ID_1} </Tooltip>
                     </Polygon>
                 })}

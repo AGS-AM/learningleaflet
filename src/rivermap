@@ -1,0 +1,31 @@
+{rivers.map(river => {
+                    return <Overlay name={river} key={river}>
+                        <LayerGroup name={"lgroup" + river}>
+                            <MarkerClusterGroup showCoverageOnHover={false} zoomToBoundsOnClick={false} maxClusterRadius={30}>
+                                {/* this has been set to false, now we just create a polygon on each province and zoom on that insteado f this */}
+                                {markers.locations.map(item => {
+                                    return item.basin === river ? <Marker position={[item.lat, item.lng]} key={item.id} onclick={e => markerOnClick(item)} >
+                                        <Popup >
+                                            {flipflop === true ? <HighchartsReact highcharts={Highcharts} options={option} ref={hiRef} /> : null}
+                                            <div id={item.id + "_test"}>
+                                                <h4>ID: {item.id}</h4>
+                                                {item.name}
+                                                <br />
+                                    Lat : {item.lat}
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    Long : {item.lng}
+                                                <br />
+                                    Basin Name : {item.basin}
+                                                <br />
+                                    Type : {item.station_type}
+                                            </div>
+                                            <Button variant="contained" color={flipflop === false ? "default" : "primary"} onClick={clicked}>BOB</Button>
+                                        </Popup>
+                                    </Marker> : null
+                                }
+                                )
+                                }
+                            </MarkerClusterGroup>
+                        </LayerGroup>
+                    </Overlay>
+                })}
