@@ -8,28 +8,12 @@ import MarkerClusterGroup from 'react-leaflet-markercluster';
 import { Button } from '@material-ui/core';
 import { AppContext } from './App'
 import Chip from '@material-ui/core/Chip';
-
+require("leaflet-modal");
+require("leaflet-modal/dist/leaflet.modal.min.css");
 
 //could potentially create a func to make the graph here based each marker
 //potentially is uncertain LOL
 //find a way to make this work with react since marker and poly is at both diff placs 
-function isMarkerInsidePolygon(marker, poly) {
-    var inside = false;
-    var x = marker.getLatLng().lat, y = marker.getLatLng().lng;
-    for (var ii=0;ii<poly.getLatLngs().length;ii++){
-        var polyPoints = poly.getLatLngs()[ii];
-        for (var i = 0, j = polyPoints.length - 1; i < polyPoints.length; j = i++) {
-            var xi = polyPoints[i].lat, yi = polyPoints[i].lng;
-            var xj = polyPoints[j].lat, yj = polyPoints[j].lng;
-
-            var intersect = ((yi > y) !== (yj > y))
-                && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-            if (intersect) inside = !inside;
-        }
-    }
-
-    return inside;
-};
 async function thPoly() {
     var temp = []
     var tempret = []
@@ -68,7 +52,7 @@ function MapFun() {
             maxZoom: 16,
             attributionControl: true,
             zoomControl: true,
-            doubleClickZoom: false,
+            doubleClickZoom: false,//false so the choro can be clicked
             scrollWheelZoom: true,
             dragging: true,
             animate: true,
@@ -112,19 +96,61 @@ function MapFun() {
         }
     }, []);
     const mapRef = useRef();
-    useEffect(() => {
-        console.log("useEffect on flying happens ONLY ON FLYTO");
+
+    function mapflyTo(lat, lng, speed) {
         const { current = {} } = mapRef;
         const { leafletElement: map } = current;
-        map.flyTo([state.inputFly[0], state.inputFly[1]], state.inputFly[2], { duration: 1 })
+        if (speed === undefined) {
+            if (map.getZoom() < 8) {
+                speed = map.getZoom() + 1
+            }
+            else {
+                speed = map.getZoom()
+            }
+        }
+        map.flyTo([lat, lng], speed, { duration: 1 })
+    }
+    useEffect(() => {
+        console.log("useEffect on flying happens ONLY ON FLYTO");
+        mapflyTo(state.inputFly[0], state.inputFly[1], state.inputFly[2])
         //as stated in log this allows the users to choose how the map flies around
     }, [state.inputFly]);
+
+    function popModal(texttoShow) {
+        const { current = {} } = mapRef;
+        const { leafletElement: map } = current;
+        //maybe create a func that takes input and fires the modal
+        //eg. func takes in text for content and stuff, then it goes boom and modal ez, that means the button can be on clicked and walla modals
+        map.fire('modal', {
+
+            content: 'clicked at ' + texttoShow,        // HTML string
+
+            closeTitle: 'close',                 // alt title of the close button
+            zIndex: 10000,                       // needs to stay on top of the things
+            transitionDuration: 300,             // expected transition duration
+
+            template: '{content}',               // modal body template, this doesn't include close button and wrappers
+
+            // callbacks for convenience,
+            // you can set up you handlers here for the contents
+            // change at your own risk
+            OVERLAY_CLS: 'overlay',              // overlay(backdrop) CSS class
+            MODAL_CLS: 'modal',                  // all modal blocks wrapper CSS class
+            MODAL_CONTENT_CLS: 'modal-content',  // modal window CSS class
+            INNER_CONTENT_CLS: 'modal-inner',    // inner content wrapper
+            SHOW_CLS: 'show',                    // `modal open` CSS class, here go your transitions
+            CLOSE_CLS: 'close'                   // `x` button CSS class
+        });
+    }
+
     const { BaseLayer, Overlay } = LayersControl;
     var tobepushed = [];
     useEffect(() => {
+
         console.log("dispatch ONCE");
         const { current = {} } = mapRef;
         const { leafletElement: map } = current;
+
         map.on("overlayadd", e => {
             setflip(false)
             tobepushed.push(e.name);
@@ -188,8 +214,12 @@ function MapFun() {
     }
     const [flipflop, setflip] = useState(false);
     //a flipflop state between true and false for a button 
-    const clicked = () => setflip(!flipflop);
+    const clicked = (recieved) => {
+        if (flipflop) popModal(recieved);
+        setflip(!flipflop);
+    }
     var hiRef = useRef();
+
     //I presume this part is unused but lets keep it here for safe keeps
     return (
         <LeafletMap ref={mapRef}
@@ -229,7 +259,7 @@ function MapFun() {
 
                 {/* testing polygon with maps */}
                 {thpolygons.map(thpol => {
-                    return <Polygon name={thpol.properties.ID_1} key={thpol.properties.ID_1} onmouseout={a => a.target.setStyle({ stroke: false, color: supercoolcolors(thpol.properties.ID_1), fillOpacity: "20%" })} onmouseover={a => a.target.setStyle({ stroke: true, color: supercoolcolors(thpol.properties.ID_1), fillOpacity: "50%" })} stroke={false} fillColor={supercoolcolors(thpol.properties.ID_1)} fillOpacity="20%" positions={thpol.geometry.coordinates} >
+                    return <Polygon name={thpol.properties.ID_1} key={thpol.properties.ID_1} onClick={e => mapflyTo(e.latlng.lat, e.latlng.lng)} onmouseout={a => a.target.setStyle({ stroke: false, color: supercoolcolors(thpol.properties.ID_1), fillOpacity: "20%" })} onmouseover={a => a.target.setStyle({ stroke: true, color: supercoolcolors(thpol.properties.ID_1), fillOpacity: "50%" })} stroke={false} fillColor={supercoolcolors(thpol.properties.ID_1)} fillOpacity="20%" positions={thpol.geometry.coordinates} >
                         <Tooltip>{thpol.properties.NL_NAME_1} {thpol.properties.ID_1} </Tooltip>
                     </Polygon>
                 })}
@@ -255,7 +285,7 @@ function MapFun() {
                                                 <br />
                                     Type : {item.station_type}
                                             </div>
-                                            <Button variant="contained" color={flipflop === false ? "default" : "primary"} onClick={clicked}>BOB</Button>
+                                            <Button variant="contained" color={flipflop === false ? "default" : "primary"} onClick={e => clicked(item.name)}>BOB</Button>
                                         </Popup>
                                     </Marker> : null
                                 }

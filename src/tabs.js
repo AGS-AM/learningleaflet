@@ -26,14 +26,19 @@ async function fetchData() {
     });
     return result.data.locations;
 } //getches the data using axios oh and it changes dem nulls and "" to empty
+
+
 function TabsInfo() {
     const { state, dispatch } = useContext(AppContext);
     //context for communicating with maps
     const [value, setValue] = React.useState(0);
     const handleChange = (event, newValue) => {
         setValue(newValue);
+        console.log(newValue);
     };
     const [pre, setPre] = useState([]);
+    const [preA, setPreA] = useState([]);
+    const [preR, setPreR] = useState([]);
     useEffect(() => {
         //calls the fetched data to be used
         console.log("once only you shall see");
@@ -45,19 +50,30 @@ function TabsInfo() {
     const [purgeA, setpurgeA] = useState([]);
     const [purgeR, setpurgeR] = useState([]);
     useEffect(() => {
+        async function onceuponawait() {
+            //to use filter LOL
+            setPreA(pre.filter(p => p.station_type === "A"))
+            setPreR(pre.filter(p => p.station_type === "R"))
+        }
+        onceuponawait()
+    }, [pre])
+    useEffect(() => {
         console.log("Only seen when a change happens in the overlay");
+        
         var tempA = [];
         var tempR = [];
-        async function waitforFetch() {
+        // async function waitforFetch() {
             //purges A and R, there was a plan to make it more stable and optimized but I just threw it out the window. . . .
-            pre.map((row) => (row.station_type === "A" ? state.inputArray.indexOf(row.basin) !== -1 ? tempA.push(row) : null : null));
-            setpurgeA(tempA);
-            pre.map((row) => (row.station_type === "R" ? state.inputArray.indexOf(row.basin) !== -1 ? tempR.push(row) : null : null));
-            setpurgeR(tempR);
-        }
-        waitforFetch()
+            if(value === 1)
+            {preA.map((row) => ( state.inputArray.indexOf(row.basin) !== -1 ? tempA.push(row) : null));
+            setpurgeA(tempA);}
+            else
+            {preR.map((row) => ( state.inputArray.indexOf(row.basin) !== -1 ? tempR.push(row) : null));
+            setpurgeR(tempR);}
+        // }
+        // waitforFetch()
         //using length as we only want this to run when either there is a new added overlay or an overlay is unselected
-    }, [state.inputArray.length]);
+    }, [state.inputArray.length,value]);
 
     return (
         <>
@@ -109,7 +125,7 @@ function TabsInfo() {
                                         chart: {
                                             height: 300,
                                             width: 500,
-                                            
+
                                         },
                                         title: {
                                             text: rowData.name
