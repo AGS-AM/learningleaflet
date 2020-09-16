@@ -34,7 +34,7 @@ function TabsInfo() {
     const [value, setValue] = React.useState(0);
     const handleChange = (event, newValue) => {
         setValue(newValue);
-        console.log(newValue);
+        // console.log(newValue);/
     };
     const [pre, setPre] = useState([]);
     const [preA, setPreA] = useState([]);
@@ -59,21 +59,23 @@ function TabsInfo() {
     }, [pre])
     useEffect(() => {
         console.log("Only seen when a change happens in the overlay");
-        
+        // console.log(preA);
         var tempA = [];
         var tempR = [];
         // async function waitforFetch() {
-            //purges A and R, there was a plan to make it more stable and optimized but I just threw it out the window. . . .
-            if(value === 1)
-            {preA.map((row) => ( state.inputArray.indexOf(row.basin) !== -1 ? tempA.push(row) : null));
-            setpurgeA(tempA);}
-            else
-            {preR.map((row) => ( state.inputArray.indexOf(row.basin) !== -1 ? tempR.push(row) : null));
-            setpurgeR(tempR);}
+        //purges A and R, there was a plan to make it more stable and optimized but I just threw it out the window. . . .
+        if (value === 1) {
+            preA.map((row) => (state.inputArray.indexOf(row.basin) !== -1 ? tempA.push(row) : null));
+            setpurgeA(tempA);
+        }
+        else {
+            preR.map((row) => (state.inputArray.indexOf(row.basin) !== -1 ? tempR.push(row) : null));
+            setpurgeR(tempR);
+        }
         // }
         // waitforFetch()
         //using length as we only want this to run when either there is a new added overlay or an overlay is unselected
-    }, [state.inputArray.length,value]);
+    }, [state.inputArray.length, value]);
 
     return (
         <>
@@ -95,6 +97,26 @@ function TabsInfo() {
                             {
                                 title: "Name",
                                 field: "name",
+                                align: "left"
+                            },
+                            {
+                                title: "Amphoe Name",
+                                field: "amphoe_name",
+                                align: "left"
+                            },
+                            {
+                                title: "Code",
+                                field: "code",
+                                align: "left"
+                            },
+                            {
+                                title: "Created",
+                                field: "created",
+                                align: "left"
+                            },
+                            {
+                                title: "Geocode",
+                                field: "geocode",
                                 align: "left"
                             },
                             {
@@ -162,11 +184,12 @@ function TabsInfo() {
                             )
                         }}
                         options={{
-                            actionsColumnIndex: -1,
-                            pageSize: 5,
-                            pageSizeOptions: []
-                        }}
-                    />
+                                actionsColumnIndex: -1,
+                                pageSize: 5,
+                                pageSizeOptions: []
+                            }
+                        }
+                            />
                 }
             </TabPanel>
             <TabPanel value={value} index={1}>

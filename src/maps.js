@@ -10,6 +10,7 @@ import { AppContext } from './App'
 import Chip from '@material-ui/core/Chip';
 import LoadingOverlay from 'react-loading-overlay'
 import { stat } from 'fs';
+import { TIMEOUT } from 'dns';
 require("leaflet-modal");
 require("leaflet-modal/dist/leaflet.modal.min.css");
 
@@ -22,11 +23,11 @@ async function thPoly() {
     const fetchData = async () => {
         const result = await axios(
             //Changing means the inner parts of the codes would also have to be changed 
-            './resource/converted.json',
-            // './resource/thnew.json',
+            // './resource/converted.json',
+            './resource/thnew.json',
         );
         temp = result.data.features
-
+            console.log(temp);
         return temp;
     };
 
@@ -40,15 +41,15 @@ async function thPoly() {
 }
 function supercoolcolors(c) {
    
-    return c > 1.2 ? '#a83830' :
-        c > 0.8 ? '#c85848' :
-            c > 0.4 ? '#f87030' :
-                c > 0.2 ? '#f89038' : '#f0a860'
+    return c > 70 ? '#a83830' :
+        c > 50 ? '#c85848' :
+            c > 30 ? '#f87030' :
+                c > 20 ? '#f89038' : '#f0a860'
 }
 function MapFun() {
 
     const { state, dispatch } = useContext(AppContext);
-    const [isLoading, setLoad] = useState(true);
+    // const [isLoading, setLoad] = useState(true);
     //context to communicate with other components
     const [controlSet] = useState(
         {
@@ -68,19 +69,22 @@ function MapFun() {
     const fetchData = async () => {
         const result = await axios(
             './resource/station.json',
+            
         );
         result.data.locations.forEach(element => {
             element.basin = element.basin || "Empty";
         });
         setMarkers(result.data);
         //Thaimapped polygons here
+        console.log("showing da load");
         popModal("This takes a long while to load so be patient please", true)
         var tester = await thPoly();
-        setLoad(false)
-        popModal("",false)
+        // setLoad(false)
+        console.log("killing load");
+        popModal("LOL",false)
         setthpolygons(tester);
         
-        // console.log(tester);
+        console.log(tester);
         return result.data.locations;
     };
     //getches the data from a downloaded json
@@ -141,7 +145,7 @@ function MapFun() {
 
             closeTitle: 'close',                 // alt title of the close button
             zIndex: 10000,                       // needs to stay on top of the things
-            transitionDuration: 300,             // expected transition duration
+            transitionDuration: 500,             // expected transition duration
             template: '{content}',               // modal body template, this doesn't include close button and wrappers
             OVERLAY_CLS: 'overlay',              // overlay(backdrop) CSS class
             MODAL_CLS: 'modal',                  // all modal blocks wrapper CSS class
@@ -150,8 +154,13 @@ function MapFun() {
             SHOW_CLS: 'show',                    // `modal open` CSS class, here go your transitions
             CLOSE_CLS: 'close'                   // `x` button CSS class
         });
-        else
+        else{
+            console.log("closing modal");
+            setTimeout(() => { 
         map.closeModal()
+            }, 1000);
+            //too fast of a load makes it skip, at least 1 second is needed for the transition to be done
+        }
     }
 
     const { BaseLayer, Overlay } = LayersControl;
@@ -271,8 +280,8 @@ function MapFun() {
 
                 {/* testing polygon with maps */}
                 {thpolygons.map(thpol => {
-                    return <Polygon name={thpol.properties.ADM1_PCODE} key={thpol.properties.ADM1_PCODE} onClick={e => mapflyTo(e.latlng.lat, e.latlng.lng)} onmouseout={a => a.target.setStyle({ stroke: false, color: supercoolcolors(thpol.properties.Shape_Area), fillOpacity: "20%" })} onmouseover={a => a.target.setStyle({ stroke: true, color: supercoolcolors(thpol.properties.Shape_Area), fillOpacity: "50%" })} stroke={false} fillColor={supercoolcolors(thpol.properties.Shape_Area)} fillOpacity="20%" positions={thpol.geometry.coordinates} >
-                        <Tooltip>{thpol.properties.ADM1_TH} {thpol.properties.ADM1_PCODE} </Tooltip>
+                    return <Polygon name={thpol.properties.ID_1} key={thpol.properties.ID_1} onClick={e => mapflyTo(e.latlng.lat, e.latlng.lng)} onmouseout={a => a.target.setStyle({ stroke: false, color: supercoolcolors(thpol.properties.ID_1), fillOpacity: "20%" })} onmouseover={a => a.target.setStyle({ stroke: true, color: supercoolcolors(thpol.properties.ID_1), fillOpacity: "50%" })} stroke={false} fillColor={supercoolcolors(thpol.properties.ID_1)} fillOpacity="20%" positions={thpol.geometry.coordinates} >
+                        <Tooltip>{thpol.properties.NAME_1} {thpol.properties.ID_1} </Tooltip>
                     </Polygon>
                 })}
 
