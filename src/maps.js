@@ -19,10 +19,10 @@ async function thPoly() {
     var tempret = []
     const fetchData = async () => {
         const result = await axios(
-            './resource/thnew.json',
+            './resource/converted.json',
         );
         temp = result.data.features
-
+        console.log(temp);
 
         return temp;
     };
@@ -259,8 +259,8 @@ function MapFun() {
 
                 {/* testing polygon with maps */}
                 {thpolygons.map(thpol => {
-                    return <Polygon name={thpol.properties.ID_1} key={thpol.properties.ID_1} onClick={e => mapflyTo(e.latlng.lat, e.latlng.lng)} onmouseout={a => a.target.setStyle({ stroke: false, color: supercoolcolors(thpol.properties.ID_1), fillOpacity: "20%" })} onmouseover={a => a.target.setStyle({ stroke: true, color: supercoolcolors(thpol.properties.ID_1), fillOpacity: "50%" })} stroke={false} fillColor={supercoolcolors(thpol.properties.ID_1)} fillOpacity="20%" positions={thpol.geometry.coordinates} >
-                        <Tooltip>{thpol.properties.NL_NAME_1} {thpol.properties.ID_1} </Tooltip>
+                    return <Polygon name={thpol.properties.ADM1_PCODE} key={thpol.properties.ADM1_PCODE} onClick={e => mapflyTo(e.latlng.lat, e.latlng.lng)} onmouseout={a => a.target.setStyle({ stroke: false, color: supercoolcolors(thpol.properties.ADM1_PCODE), fillOpacity: "20%" })} onmouseover={a => a.target.setStyle({ stroke: true, color: supercoolcolors(thpol.properties.ADM1_PCODE), fillOpacity: "50%" })} stroke={false} fillColor={supercoolcolors(thpol.properties.ADM1_PCODE)} fillOpacity="20%" positions={thpol.geometry.coordinates} >
+                        <Tooltip>{thpol.properties.ADM1_TH} {thpol.properties.ADM1_PCODE} </Tooltip>
                     </Polygon>
                 })}
 
