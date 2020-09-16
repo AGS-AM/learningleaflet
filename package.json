@@ -27,6 +27,7 @@
     "react-leaflet": "^2.7.0",
     "react-leaflet-dialog": "^2.0.1",
     "react-leaflet-markercluster": "^2.0.0",
+    "react-loading-overlay": "^1.0.1",
     "react-modal": "^3.11.2",
     "react-router": "^5.2.0",
     "react-scripts": "3.4.3",

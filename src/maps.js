@@ -8,6 +8,8 @@ import MarkerClusterGroup from 'react-leaflet-markercluster';
 import { Button } from '@material-ui/core';
 import { AppContext } from './App'
 import Chip from '@material-ui/core/Chip';
+import LoadingOverlay from 'react-loading-overlay'
+import { stat } from 'fs';
 require("leaflet-modal");
 require("leaflet-modal/dist/leaflet.modal.min.css");
 
@@ -19,10 +21,11 @@ async function thPoly() {
     var tempret = []
     const fetchData = async () => {
         const result = await axios(
+            //Changing means the inner parts of the codes would also have to be changed 
             './resource/converted.json',
+            // './resource/thnew.json',
         );
         temp = result.data.features
-        console.log(temp);
 
         return temp;
     };
@@ -36,14 +39,16 @@ async function thPoly() {
     return tempret
 }
 function supercoolcolors(c) {
-    return c > 64 ? '#a83830' :
-        c > 48 ? '#c85848' :
-            c > 32 ? '#f87030' :
-                c > 16 ? '#f89038' : '#f0a860'
+   
+    return c > 1.2 ? '#a83830' :
+        c > 0.8 ? '#c85848' :
+            c > 0.4 ? '#f87030' :
+                c > 0.2 ? '#f89038' : '#f0a860'
 }
 function MapFun() {
 
     const { state, dispatch } = useContext(AppContext);
+    const [isLoading, setLoad] = useState(true);
     //context to communicate with other components
     const [controlSet] = useState(
         {
@@ -69,8 +74,12 @@ function MapFun() {
         });
         setMarkers(result.data);
         //Thaimapped polygons here
+        popModal("This takes a long while to load so be patient please", true)
         var tester = await thPoly();
+        setLoad(false)
+        popModal("",false)
         setthpolygons(tester);
+        
         // console.log(tester);
         return result.data.locations;
     };
@@ -84,8 +93,11 @@ function MapFun() {
         waitforFetch();
         var tempinfo = [];
         var temp2 = [];
+        
         async function waitforFetch() {
+            
             tempinfo = await fetchData();
+            
             tempinfo.forEach(element => {
                 temp2.push(element.basin)
 
@@ -116,24 +128,21 @@ function MapFun() {
         //as stated in log this allows the users to choose how the map flies around
     }, [state.inputFly]);
 
-    function popModal(texttoShow) {
+    function popModal(texttoShow, status) {
         const { current = {} } = mapRef;
         const { leafletElement: map } = current;
         //maybe create a func that takes input and fires the modal
         //eg. func takes in text for content and stuff, then it goes boom and modal ez, that means the button can be on clicked and walla modals
-        map.fire('modal', {
+        //map.fire('modal',  ||This works too just that openModal looks more simplified
+        if(status)
+        map.openModal({
 
-            content: 'clicked at ' + texttoShow,        // HTML string
+            content: texttoShow,        // HTML string
 
             closeTitle: 'close',                 // alt title of the close button
             zIndex: 10000,                       // needs to stay on top of the things
             transitionDuration: 300,             // expected transition duration
-
             template: '{content}',               // modal body template, this doesn't include close button and wrappers
-
-            // callbacks for convenience,
-            // you can set up you handlers here for the contents
-            // change at your own risk
             OVERLAY_CLS: 'overlay',              // overlay(backdrop) CSS class
             MODAL_CLS: 'modal',                  // all modal blocks wrapper CSS class
             MODAL_CONTENT_CLS: 'modal-content',  // modal window CSS class
@@ -141,6 +150,8 @@ function MapFun() {
             SHOW_CLS: 'show',                    // `modal open` CSS class, here go your transitions
             CLOSE_CLS: 'close'                   // `x` button CSS class
         });
+        else
+        map.closeModal()
     }
 
     const { BaseLayer, Overlay } = LayersControl;
@@ -215,13 +226,14 @@ function MapFun() {
     const [flipflop, setflip] = useState(false);
     //a flipflop state between true and false for a button 
     const clicked = (recieved) => {
-        if (flipflop) popModal(recieved);
+        if (flipflop) popModal(recieved,true);
         setflip(!flipflop);
     }
     var hiRef = useRef();
 
     //I presume this part is unused but lets keep it here for safe keeps
     return (
+        
         <LeafletMap ref={mapRef}
             center={controlSet.center}
             zoom={controlSet.zoom}
@@ -236,7 +248,7 @@ function MapFun() {
             closePopupOnClick={true} //changable
             worldCopyJump={true}
         >
-
+        
             <Chip
                 className="chip"
                 label={flipflop === false ? "Show Chart: Off" : "Show Chart: On"}
@@ -259,7 +271,7 @@ function MapFun() {
 
                 {/* testing polygon with maps */}
                 {thpolygons.map(thpol => {
-                    return <Polygon name={thpol.properties.ADM1_PCODE} key={thpol.properties.ADM1_PCODE} onClick={e => mapflyTo(e.latlng.lat, e.latlng.lng)} onmouseout={a => a.target.setStyle({ stroke: false, color: supercoolcolors(thpol.properties.ADM1_PCODE), fillOpacity: "20%" })} onmouseover={a => a.target.setStyle({ stroke: true, color: supercoolcolors(thpol.properties.ADM1_PCODE), fillOpacity: "50%" })} stroke={false} fillColor={supercoolcolors(thpol.properties.ADM1_PCODE)} fillOpacity="20%" positions={thpol.geometry.coordinates} >
+                    return <Polygon name={thpol.properties.ADM1_PCODE} key={thpol.properties.ADM1_PCODE} onClick={e => mapflyTo(e.latlng.lat, e.latlng.lng)} onmouseout={a => a.target.setStyle({ stroke: false, color: supercoolcolors(thpol.properties.Shape_Area), fillOpacity: "20%" })} onmouseover={a => a.target.setStyle({ stroke: true, color: supercoolcolors(thpol.properties.Shape_Area), fillOpacity: "50%" })} stroke={false} fillColor={supercoolcolors(thpol.properties.Shape_Area)} fillOpacity="20%" positions={thpol.geometry.coordinates} >
                         <Tooltip>{thpol.properties.ADM1_TH} {thpol.properties.ADM1_PCODE} </Tooltip>
                     </Polygon>
                 })}
@@ -296,6 +308,7 @@ function MapFun() {
                     </Overlay>
                 })}
             </LayersControl>
+           
         </LeafletMap>
     );
 }

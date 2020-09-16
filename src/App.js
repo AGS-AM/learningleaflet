@@ -27,16 +27,18 @@ function reducer(state, action) {
 function App() {
 
   const [state, dispatch] = useReducer(reducer, initialState);
-
+  function refreshPage() {
+    window.location.reload(false);
+  }
   return (
 
     <div className="App">
     
-    <div className="title">just a random div for the title</div>
+    {/* <div className="title">just a random div for the title</div> */}
       <Paper>
         <AppContext.Provider value={{ state, dispatch }}>
           <MapFun />
-          <div className="temp"><TabsInfo /></div>
+          <div className="temp"><TabsInfo /><button onClick={refreshPage}>RELOAD</button></div>
 
         </AppContext.Provider>
 
