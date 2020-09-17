@@ -8,9 +8,6 @@ import MarkerClusterGroup from 'react-leaflet-markercluster';
 import { Button } from '@material-ui/core';
 import { AppContext } from './App'
 import Chip from '@material-ui/core/Chip';
-import LoadingOverlay from 'react-loading-overlay'
-import { stat } from 'fs';
-import { TIMEOUT } from 'dns';
 require("leaflet-modal");
 require("leaflet-modal/dist/leaflet.modal.min.css");
 
@@ -27,7 +24,7 @@ async function thPoly() {
             './resource/thnew.json',
         );
         temp = result.data.features
-            console.log(temp);
+        console.log(temp);
         return temp;
     };
 
@@ -40,12 +37,12 @@ async function thPoly() {
     return tempret
 }
 function supercoolcolors(c) {
-   
     return c > 70 ? '#a83830' :
         c > 50 ? '#c85848' :
             c > 30 ? '#f87030' :
                 c > 20 ? '#f89038' : '#f0a860'
 }
+
 function MapFun() {
 
     const { state, dispatch } = useContext(AppContext);
@@ -66,10 +63,11 @@ function MapFun() {
         }
     );
     //init of Map controls 
+
     const fetchData = async () => {
         const result = await axios(
             './resource/station.json',
-            
+
         );
         result.data.locations.forEach(element => {
             element.basin = element.basin || "Empty";
@@ -79,29 +77,43 @@ function MapFun() {
         console.log("showing da load");
         popModal("This takes a long while to load so be patient please", true)
         var tester = await thPoly();
-        // setLoad(false)
+
         console.log("killing load");
-        popModal("LOL",false)
+
+        popModal("LOL", false);
         setthpolygons(tester);
-        
-        console.log(tester);
+
         return result.data.locations;
     };
     //getches the data from a downloaded json
     const [markers, setMarkers] = useState({ locations: [] });
     const [thpolygons, setthpolygons] = useState([]);
     const [rivers, setRivers] = useState([]);
+    const [modaldown, setModaldown] = useState(false);
     //states to be used
     useEffect(() => {
+        console.log("Changes In THPOLY");
+        console.log(thpolygons.length);
+        console.log(modaldown);
+        if(modaldown === true && thpolygons.length === 0)
+        {
+            console.log("IT GOT HERE");
+            popModal("BRUH", true)
+            setModaldown(false)
+        }
+    }, [thpolygons,modaldown])
+
+    useEffect(() => {
+
         console.log("Useeffect to distinct happens ONCE");
         waitforFetch();
+
         var tempinfo = [];
         var temp2 = [];
-        
+
         async function waitforFetch() {
-            
+
             tempinfo = await fetchData();
-            
             tempinfo.forEach(element => {
                 temp2.push(element.basin)
 
@@ -110,6 +122,7 @@ function MapFun() {
             setRivers(distinct(temp2).sort().reverse());
 
         }
+
     }, []);
     const mapRef = useRef();
 
@@ -138,26 +151,28 @@ function MapFun() {
         //maybe create a func that takes input and fires the modal
         //eg. func takes in text for content and stuff, then it goes boom and modal ez, that means the button can be on clicked and walla modals
         //map.fire('modal',  ||This works too just that openModal looks more simplified
-        if(status)
-        map.openModal({
+        if (status)
+            map.openModal({
 
-            content: texttoShow,        // HTML string
+                content: texttoShow,        // HTML string
 
-            closeTitle: 'close',                 // alt title of the close button
-            zIndex: 10000,                       // needs to stay on top of the things
-            transitionDuration: 500,             // expected transition duration
-            template: '{content}',               // modal body template, this doesn't include close button and wrappers
-            OVERLAY_CLS: 'overlay',              // overlay(backdrop) CSS class
-            MODAL_CLS: 'modal',                  // all modal blocks wrapper CSS class
-            MODAL_CONTENT_CLS: 'modal-content',  // modal window CSS class
-            INNER_CONTENT_CLS: 'modal-inner',    // inner content wrapper
-            SHOW_CLS: 'show',                    // `modal open` CSS class, here go your transitions
-            CLOSE_CLS: 'close'                   // `x` button CSS class
-        });
-        else{
+                onShow: function (evt) { console.log("BIGBOB") },
+                onHide: function (evt) { setModaldown(true)},
+                closeTitle: 'close',                 // alt title of the close button
+                zIndex: 10000,                       // needs to stay on top of the things
+                transitionDuration: 500,             // expected transition duration
+                template: '{content}',               // modal body template, this doesn't include close button and wrappers
+                OVERLAY_CLS: 'overlay',              // overlay(backdrop) CSS class
+                MODAL_CLS: 'modal',                  // all modal blocks wrapper CSS class
+                MODAL_CONTENT_CLS: 'modal-content',  // modal window CSS class
+                INNER_CONTENT_CLS: 'modal-inner',    // inner content wrapper
+                SHOW_CLS: 'show',                    // `modal open` CSS class, here go your transitions
+                CLOSE_CLS: 'close'                   // `x` button CSS class
+            });
+        else {
             console.log("closing modal");
-            setTimeout(() => { 
-        map.closeModal()
+            setTimeout(() => {
+                map.closeModal()
             }, 1000);
             //too fast of a load makes it skip, at least 1 second is needed for the transition to be done
         }
@@ -235,14 +250,14 @@ function MapFun() {
     const [flipflop, setflip] = useState(false);
     //a flipflop state between true and false for a button 
     const clicked = (recieved) => {
-        if (flipflop) popModal(recieved,true);
+        if (flipflop) popModal(recieved, true);
         setflip(!flipflop);
     }
     var hiRef = useRef();
 
     //I presume this part is unused but lets keep it here for safe keeps
     return (
-        
+
         <LeafletMap ref={mapRef}
             center={controlSet.center}
             zoom={controlSet.zoom}
@@ -257,7 +272,7 @@ function MapFun() {
             closePopupOnClick={true} //changable
             worldCopyJump={true}
         >
-        
+
             <Chip
                 className="chip"
                 label={flipflop === false ? "Show Chart: Off" : "Show Chart: On"}
@@ -317,7 +332,7 @@ function MapFun() {
                     </Overlay>
                 })}
             </LayersControl>
-           
+
         </LeafletMap>
     );
 }
